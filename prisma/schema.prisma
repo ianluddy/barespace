@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Service {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   description String
   duration    Int         // Duration in minutes
@@ -26,7 +26,7 @@ model Service {
 }
 
 model Salon {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   address     String
   phone       String
@@ -39,7 +39,7 @@ model Salon {
 }
 
 model Staff {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   email       String
   phone       String
@@ -48,13 +48,13 @@ model Staff {
   services    Service[]
   appointments Appointment[]
   salon       Salon       @relation(fields: [salonId], references: [id])
-  salonId     Int
+  salonId     String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
 
 model Customer {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   email       String      @unique
   phone       String?
@@ -70,11 +70,11 @@ model Appointment {
   endTime     DateTime
   status      String    @default("PENDING")
   service     Service   @relation(fields: [serviceId], references: [id])
-  serviceId   Int
+  serviceId   String
   staff       Staff     @relation(fields: [staffId], references: [id])
-  staffId     Int
+  staffId     String
   customer    Customer  @relation(fields: [customerId], references: [id])
-  customerId  Int
+  customerId  String
   notes       String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
