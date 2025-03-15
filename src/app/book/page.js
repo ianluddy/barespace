@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -280,7 +280,7 @@ const ConfirmationValue = styled.span`
   font-weight: 500;
 `
 
-export default function Booking() {
+function BookingContent() {
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedSalon, setSelectedSalon] = useState(null)
   const [selectedService, setSelectedService] = useState(null)
@@ -881,6 +881,22 @@ export default function Booking() {
           )}
         </NavigationButtons>
       </BookingContainer>
+    </Container>
+  )
+}
+
+export default function Booking() {
+  return (
+    <Container>
+      <Suspense fallback={
+        <BookingContainer>
+          <LoadingOverlay>
+            <LoadingSpinner />
+          </LoadingOverlay>
+        </BookingContainer>
+      }>
+        <BookingContent />
+      </Suspense>
     </Container>
   )
 } 
