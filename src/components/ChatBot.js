@@ -364,7 +364,7 @@ export default function ChatBot() {
       const botMessages = responses.map(body => ({ body, isUser: false }))
       setMessages(prev => [...prev, ...botMessages])
       setIsTyping(false)
-    }, 1000)
+    }, 700)
   }
 
   const getBotResponse = async (message) => {
@@ -635,6 +635,8 @@ export default function ChatBot() {
             response.push(responses.confirmReschedule);
           } else {
             setExistingBooking(null);
+            setAction(null);
+            setActionConfirmed(false);
           }
         }
         return response;
