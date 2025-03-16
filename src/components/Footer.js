@@ -101,9 +101,6 @@ export default function () {
           </SocialLinks>
         </FooterSection>
       </FooterContent>
-      <Copyright>
-        © {new Date().getFullYear()} Barespace. All rights reserved.
-      </Copyright>
     </Footer>
   )
 } 
