@@ -255,7 +255,7 @@ export default function ChatBot() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsOpen(true);
+      setIsOpen(location.pathname === '/');
     }, 1500);
 
     return () => clearTimeout(timer);
