@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
 import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
+import { VoiceInput } from '@/lib/voice'
 
 const ChatContainer = styled.div`
   position: fixed;
@@ -156,6 +157,36 @@ const ActionButton = styled.button`
   }
 `
 
+const MicButton = styled.button`
+  background: ${props => props.$isListening ? 'var(--error)' : 'var(--primary)'};
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 10px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    background: var(--border);
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: scale(2.6);
+  }
+`
+
 const responses = {
   default: ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Book \n - Confirm \n - Cancel \n - Reschedule'],
   booking: ['Sounds like you want to book an appointment. Would you like me to help you with that?'],
@@ -194,12 +225,10 @@ export default function ChatBot() {
   ])
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
+  const [isListening, setIsListening] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  const voiceInput = useRef(new VoiceInput())
 
   const [newBookingEmail, setNewBookingEmail] = useState("")
   const [newBookingDate, setNewBookingDate] = useState("")
@@ -208,10 +237,8 @@ export default function ChatBot() {
   const [newBookingStaff, setNewBookingStaff] = useState("")
   const [newBookingSalon, setNewBookingSalon] = useState("")
 
-    // const [bookingRef, setBookingRef] = useState("")
   const [booking, setBooking] = useState(null)
   const [action, setAction] = useState(null)
-
 
   useEffect(() => {
     if( newBookingSalon ) {
@@ -253,7 +280,6 @@ export default function ChatBot() {
     }
   }, [newBookingTime]);
 
-
   useEffect(() => {
     scrollToBottom()
   }, [messages])
@@ -271,6 +297,37 @@ export default function ChatBot() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const handleVoiceInput = () => {
+    if (isListening) {
+      voiceInput.current.stopListening()
+      setIsListening(false)
+      return
+    }
+
+    setIsListening(true)
+    voiceInput.current.startListening(
+      // onResult
+      (text) => {
+        setIsListening(false)
+        setInputValue(text)
+        handleSend(text)
+      },
+      // onError
+      (error) => {
+        console.error('Voice input error:', error)
+        setIsListening(false)
+        setMessages(prev => [...prev, {
+          body: "Sorry, I couldn't understand that. Please try again or type your message.",
+          isUser: false
+        }])
+      }
+    )
+  }
 
   const handleSend = async (programmaticValue = null) => {
     if (!inputValue.trim() && !programmaticValue) return
@@ -293,7 +350,6 @@ export default function ChatBot() {
   }
 
   const getBotResponse = async (message) => {
-
     const response = [];
     message = message.toLowerCase();
 
@@ -812,6 +868,22 @@ export default function ChatBot() {
             <div ref={messagesEndRef} />
           </ChatMessages>
           <ChatInput>
+            <MicButton
+              onClick={handleVoiceInput}
+              $isListening={isListening}
+              title={isListening ? 'Stop listening' : 'Start voice input'}
+            >
+              {isListening ? (
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="6" width="12" height="12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                  <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+              )}
+            </MicButton>
             <Input
               ref={inputRef}
               type="text"
@@ -821,7 +893,7 @@ export default function ChatBot() {
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             />
             <SendButton
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!inputValue.trim() || isTyping}
             >
               Send
