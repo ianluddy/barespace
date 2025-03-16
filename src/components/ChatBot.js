@@ -174,6 +174,7 @@ const responses = {
   confirmCancel: ['Are you sure you want to cancel booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
   confirmReschedule: ['Are you sure you want to reschedule booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
   confirmConfirm: ['Your booking is confirmed.'],
+  welcome: ['You\'re very welcome!'],
 }
 
 export default function ChatBot() {
@@ -290,6 +291,7 @@ export default function ChatBot() {
     const email = message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/)
     const yes = message.match(/yes|ya|yeah|yup|yep/);
     const no = message.match(/no/);
+    const thanks = message.match(/thanks/);
 
     const reschedule = message.match(/reschedule/);
     const confirm = message.match(/confirm/);
@@ -309,12 +311,19 @@ export default function ChatBot() {
       return ['Let\'s start over. What can I help you with?'];
     }
 
-    if( booking && action && yes ) {
-      console.log('booking', booking);
-      console.log('action', action);
-      console.log('yes', yes);
-      return ['doing action'];
+    if( thanks ) {
+      response.push(
+        responses.welcome
+      );
+      return response;
     }
+
+    // if( booking && action && yes ) {
+    //   console.log('booking', booking);
+    //   console.log('action', action);
+    //   console.log('yes', yes);
+    //   return ['doing action'];
+    // }
 
     if( action && yes ) {
       response.push(
