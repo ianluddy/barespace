@@ -590,6 +590,7 @@ export default function ChatBot() {
               `Stylist: ${appointment.staff.name}` 
             );
             setAction(null);
+            setActionConfirmed(false);
             setNewBookingSalon(null);
             setNewBookingService(null);
             setNewBookingStaff(null);
