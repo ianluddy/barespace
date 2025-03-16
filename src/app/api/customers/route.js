@@ -10,6 +10,7 @@ export async function GET() {
     })
     return Response.json(customers)
   } catch (error) {
+    console.error(error);
     return Response.json({ error: 'Failed to fetch customers' }, { status: 500 })
   }
 }

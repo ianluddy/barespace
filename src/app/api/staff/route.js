@@ -27,6 +27,7 @@ export async function GET(request) {
     })
     return Response.json(staff)
   } catch (error) {
+    console.error(error);
     return Response.json({ error: 'Failed to fetch staff' }, { status: 500 })
   }
 }
@@ -50,6 +51,7 @@ export async function POST(request) {
     })
     return Response.json(staff, { status: 201 })
   } catch (error) {
+    console.error(error);
     return Response.json({ error: 'Failed to create staff member' }, { status: 400 })
   }
 } 

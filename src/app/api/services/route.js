@@ -18,6 +18,7 @@ export async function GET(request) {
     })
     return Response.json(services)
   } catch (error) {
+    console.error(error);
     return Response.json({ error: 'Failed to fetch services' }, { status: 500 })
   }
 }
@@ -36,6 +37,7 @@ export async function POST(request) {
     })
     return Response.json(service, { status: 201 })
   } catch (error) {
+    console.error(error);
     return Response.json({ error: 'Failed to create service' }, { status: 400 })
   }
 } 
