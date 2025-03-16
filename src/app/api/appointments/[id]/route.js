@@ -28,7 +28,7 @@ export async function GET(request, { params }) {
 // PUT /api/appointments/[id]
 export async function PUT(request, { params }) {
   try {
-    const id = params.id
+    const id = params.id.toUpperCase()
     const body = await request.json()
     
     const appointment = await prisma.appointment.update({
