@@ -189,10 +189,10 @@ const MicButton = styled.button`
 
 const responses = {
   default: ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Book \n - Confirm \n - Cancel \n - Reschedule'],
-  booking: ['Sounds like you want to book an appointment. Would you like me to help you with that?'],
-  cancel: ['Sounds like you want to cancel an appointment. Would you like me to help you with that?'],
-  reschedule: ['Sounds like you want to reschedule an appointment. Would you like me to help you with that?'],
-  confirm: ['Sounds like you want to confirm an appointment. Would you like me to help you with that?'],
+  book: ['Sounds like you want to book an appointment, is that correct?'],
+  cancel: ['Sounds like you want to cancel an appointment, is that correct?'],
+  reschedule: ['Sounds like you want to reschedule an appointment, is that correct?'],
+  confirm: ['Sounds like you want to confirm an appointment, is that correct?'],
   price: ['Our prices vary depending on the service. You can find detailed pricing information on our services page.'],
   salon: ['Here are our available salon locations. Please select one:'],
   service: ['Please select the service you\'d like to book:'],
@@ -201,9 +201,9 @@ const responses = {
   time: ['Please select the time you\'d like to book:'],
   email: ['Please provide your email address for the booking confirmation.'],
   help: ['Ok let me help you with that.'],
-  bookingRef: ['What is your booking reference number?'],
-  confirmCancel: ['Are you sure you want to cancel booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
-  confirmReschedule: ['Are you sure you want to reschedule booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
+  bookingRef: ['What is your booking reference number, in the format BRXXXXXX?'],
+  confirmCancel: ['Are you sure you want to cancel this booking? \n If so, please confirm by typing \'confirm\''],
+  confirmReschedule: ['Are you sure you want to reschedule this booking? \n If so, please confirm by typing \'confirm\''],
   confirmBooking: ['Type \'confirm\' to confirm your booking.'],
   welcome: ['You\'re very welcome!'],
   restart: ['Let\'s start over. What can I help you with?'],
@@ -216,12 +216,20 @@ const responses = {
   emailError: ['I\'m having trouble retrieving your email address. Please try again later.'],
   bookingError: ['I\'m having trouble retrieving your booking. Please try again later.'],
   bookingSuccess: ['Your booking is confirmed.'],
+  hi: ['Hi! How can I help you today?'],
+  voiceError: ['Sorry, I couldn\'t understand that. Please try again or type your message.'],
+  cancelSuccess: ['Booking cancelled successfully.'],
+  cancelError: ['I\'m having trouble cancelling your booking. Please try again later.'],
+  rescheduleSuccess: ['Now let\'s create a new booking. Type \'book\' to get started.'],
+  rescheduleFirst: ['First let\'s cancel your existing booking.'],
+  rescheduleError: ['I\'m having trouble rescheduling your booking. Please try again later.'],
+  bookingNotFound: ['I couldn\'t find a booking with that reference number. Please make sure you\'ve entered it correctly.'],
 }
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { body: "Hi! How can I help you today?", isUser: false }
+    { body: responses.hi, isUser: false }
   ])
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -237,8 +245,10 @@ export default function ChatBot() {
   const [newBookingStaff, setNewBookingStaff] = useState("")
   const [newBookingSalon, setNewBookingSalon] = useState("")
 
-  const [booking, setBooking] = useState(null)
+  const [existingBooking, setExistingBooking] = useState(null)
+
   const [action, setAction] = useState(null)
+  const [actionConfirmed, setActionConfirmed] = useState(false)
 
   useEffect(() => {
     if( newBookingSalon ) {
@@ -322,7 +332,7 @@ export default function ChatBot() {
         console.error('Voice input error:', error)
         setIsListening(false)
         setMessages(prev => [...prev, {
-          body: "Sorry, I couldn't understand that. Please try again or type your message.",
+          body: responses.voiceError,
           isUser: false
         }])
       }
@@ -356,39 +366,34 @@ export default function ChatBot() {
     const bookingRef = message.match(/br[a-z]{6}/);
     const email = message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/)
     const yes = message.match(/yes|ya|yeah|yup|yep/);
-    const no = message.match(/no/);
     const reschedule = message.match(/reschedule/);
     const confirm = message.match(/confirm/);
     const cancel = message.match(/cancel/);
     const price = message.match(/price|cost/);
-    const book = message.match(/book|make|create|schedule/);
+    const book = message.match(/book|make|create|schedule|new|appointment/);
     const restart = message.match(/start/);    
 
     if( restart ) {
       setAction(null);
+      setActionConfirmed(false);
       setNewBookingSalon(null);
       setNewBookingService(null);
       setNewBookingStaff(null);
       setNewBookingDate(null);
       setNewBookingTime(null);
       setNewBookingEmail(null);
+      setExistingBooking(null);
       return [responses.restart];
     }
 
     if( action && yes ) {
+      setActionConfirmed(true);
       response.push(
         responses.help
       );
     }
 
-    if( action && no ) {
-      response.push(
-        responses.default
-      );
-      return response;
-    }
-
-    if (action === 'book' ) {
+    if (action === 'book' && (yes || actionConfirmed)) {
       if( !newBookingSalon ) {
         try {
           const salons = await fetch('/api/salons').then(res => res.json());
@@ -591,83 +596,86 @@ export default function ChatBot() {
           response.push(responses.confirmError);
         }
       }
-
-      
-      // if( !newBookingEmail && !email ) {
-      //   response.push(
-      //     'What is your email address?'
-      //   );
-      // } else if (!newBookingDate && !date) {
-      //   response.push(
-      //     'What date would you like to book your appointment?'
-      //   );
-      // } else if (!newBookingTime && !time ) {
-      //   response.push(
-      //     'What time would you like to book your appointment?'
-      //   );
-      // }
-      // if (email) {
-      //   setNewBookingEmail(email[0]);
-      // }
-      // if (date) {
-      //   setNewBookingDate(date[0]);
-      // } 
-      // if (time) {
-      //   setNewBookingTime(time[0]);
-      // }
       return response;
     }
 
-    if( ['confirm', 'cancel', 'reschedule'].includes(action) ) {
-      // TODO
-    }
+    if( ['confirm', 'cancel', 'reschedule'].includes(action) && (yes || actionConfirmed) ) {
+      if (!bookingRef && !existingBooking) {
+        response.push(responses.bookingRef);
+        return response;
+      }
 
-    // if( ['confirm', 'cancel', 'reschedule'].includes(action) && bookingRef ) {
-    //   response.push(
-    //     'Let me check that for you...'
-    //   );
-    //   let fetchedBooking = null;
-    //   try {
-    //     fetchedBooking = await fetch(`/api/appointments/${bookingRef[0].toUpperCase()}`).then(res => res.json());
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    //   if (!fetchedBooking || fetchedBooking.error) {
-    //     response.push("I couldn't find a booking with that reference number. Please make sure you've entered it correctly.");
-    //   } else {
-    //     setBooking(fetchedBooking);
-    //     response.push(...[
-    //       `I found your booking. \n Booking ID: ${fetchedBooking.id} \n Date: ${new Date(fetchedBooking.date).toLocaleDateString()} \n Time: ${new Date(fetchedBooking.startTime).toLocaleTimeString()} \n Service: ${fetchedBooking.service.name} \n Stylist: ${fetchedBooking.staff.name}`,
-    //     ]);
-    //     if( action === 'cancel' ) {
-    //       response.push(
-    //         `Are you sure you want to cancel booking ${fetchedBooking.id}? \n If so, please confirm by typing 'yes'`
-    //       );
-    //     } else if( action === 'reschedule' ) {
-    //       response.push(
-    //         `Are you sure you want to reschedule booking ${fetchedBooking.id}? \n If so, please confirm by typing 'yes'`
-    //       );
-    //     } else if( action === 'confirm' ) {
-    //       response.push(
-    //         `Your booking is confirmed.`
-    //       );
-    //     }
-    //   }
-    //   return response;
-    // }
+      if( bookingRef ) {
+        let booking = null;
+        try {
+          booking = await fetch(`/api/appointments/${bookingRef}`).then(res => res.json());
+        } catch (error) {
+          console.error(error);
+        }
+        if (!booking || booking.error) {
+          response.push(responses.bookingNotFound);
+        } else {
+          setExistingBooking(booking);
+          response.push(...[
+            `I found your booking. \n Booking ID: ${booking.id} \n Date: ${new Date(booking.date).toLocaleDateString()} \n Time: ${new Date(booking.startTime).toLocaleTimeString()} \n Service: ${booking.service.name} \n Stylist: ${booking.staff.name}`
+          ]);
 
-    if( book ) {
-      setAction('book');
-      response.push(
-        'Sounds like you want to book an appointment. Would you like me to help you with that?',
-      );
-      return response;
+          if( action === 'cancel' ) {
+            response.push(responses.confirmCancel);
+          } else if( action === 'reschedule' ) {
+            response.push(responses.confirmReschedule);
+          } else {
+            setExistingBooking(null);
+          }
+        }
+        return response;
+      }
+
+      if( action === 'cancel' && existingBooking && confirm ) {
+        try{
+          await fetch(`/api/appointments/${existingBooking.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          response.push(responses.cancelSuccess);
+          setExistingBooking(null);
+          setAction(null);
+          setActionConfirmed(false);
+        } catch (error) {
+          console.error(error);
+          response.push(responses.cancelError);
+        }
+        return response;
+      }
+
+      if( action === 'reschedule' && existingBooking && confirm ) {
+        response.push(responses.rescheduleFirst);
+        try{
+          await fetch(`/api/appointments/${existingBooking.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          response.push(responses.cancelSuccess);
+          setExistingBooking(null);
+          setAction(null);
+          setActionConfirmed(false);
+        } catch (error) {
+          console.error(error);
+          response.push(responses.cancelError);
+        }
+        response.push(responses.rescheduleSuccess);
+        return response;
+      }
     }
 
     if( cancel ) {
       setAction('cancel');
       response.push(
-        'Sounds like you want to cancel an appointment. Would you like me to help you with that?',
+        responses.cancel,
       );
       return response;
     }
@@ -675,7 +683,7 @@ export default function ChatBot() {
     if( reschedule ) {
       setAction('reschedule');
       response.push(
-        'Sounds like you want to reschedule an appointment. Would you like me to help you with that?',
+        responses.reschedule,
       );
       return response;
     }
@@ -683,163 +691,28 @@ export default function ChatBot() {
     if( confirm ) {
       setAction('confirm');
       response.push(
-        'Sounds like you want to confirm an appointment. Would you like me to help you with that?',
+        responses.confirm,
+      );
+      return response;
+    }
+
+    if( book ) {
+      setAction('book');
+      response.push(
+        responses.book,
       );
       return response;
     }
 
     if( price ) {
       response.push(
-        'Our prices vary depending on the service. You can find detailed pricing information on our services page.',
+        responses.price
       );
       return response;
     }
 
-    // if( !action ) {
-    //   return ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Confirm \n - Cancel \n - Reschedule'];
-    // }  
-
     return [responses.default];
-
-
-
-
-
-    // const bookingRefMatch = message.match(/br[a-z]{6}/);
-    // const messageBookingRef = bookingRefMatch ? bookingRefMatch[0] : bookingRef;
-    // setBookingRef(messageBookingRef); // Set the booking reference for the session
-
-    // const emailMatch =  message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/);
-    // const messageEmail = emailMatch ? emailMatch[0] : email;
-    // setEmail(messageEmail); // Set the email for the session
-
-    // console.log(messageEmail);
-    // console.log(messageBookingRef);
-
-    // return response;
-
-    // Retrieve my booking
-    // Cancel my booking
-    // Reschedule my booking
-
-    // RETRIEVE BOOKING
-    if (message.includes(messageBookingRef)) {
-      let booking = null;
-      try {
-        booking = await fetch(`/api/appointments/${messageBookingRef}`).then(res => res.json());
-      } catch (error) {
-        console.error(error);
-      }
-      if (!booking || booking.error) {
-        response.push("I couldn't find a booking with that reference number. Please make sure you've entered it correctly.");
-      } else {
-        setBooking(booking);
-        response.push(...[
-          `I found your booking. \n Booking ID: ${booking.id} \n Date: ${new Date(booking.date).toLocaleDateString()} \n Time: ${new Date(booking.startTime).toLocaleTimeString()} \n Service: ${booking.service.name} \n Stylist: ${booking.staff.name}`,
-          `What would you like to do with this booking?`
-        ]);
-      }
-    }
-
-    // CANCEL BOOKING
-    if ( message.includes('cancel') || action === 'cancel') {
-      setAction('cancel');
-      if( !booking ) {
-        response.push(...[
-          "Please provide your booking reference number in the format BRXXXXXX",
-          "We will help you cancel or reschedule your appointment."
-        ]);
-      } else if (!messageEmail) {
-        response.push(...[
-          "Please provide your email address to confirm your booking cancellation.",
-        ]);
-      } else {
-        response.push(...[
-          `Are you sure you want to cancel booking ${booking.id}? \n If so, please confirm by typing 'yes'`,
-        ]);
-      }
-    }
-
-    // CONFIRM CANCEL
-    if (message === 'yes' && action === 'cancel' && booking) {
-      try{
-        await fetch(`/api/appointments/${booking.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        setAction(null);
-        setBooking(null);
-        setEmail(null);
-        setBookingRef(null);
-        response.push("Booking cancelled successfully.");
-      } catch (error) {
-        console.error(error);
-        response.push("I couldn't cancel your booking. Please try again later.");
-      }
-    }
-
-    // if (lowerMessage.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
-    //   const booking = await fetch(`/api/appointments?email=${lowerMessage.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)[0]}&next=true`).then(res => res.json());
-    //   if (!booking || booking.error) {
-    //     return ["I couldn't find any bookings for that email address. Please make sure you've entered the correct email."];
-    //   }
-    //   setBookingDetails({
-    //     email: lowerMessage.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)[0],
-    //     id: booking.id,
-    //     booking: booking
-    //   });
-    //   return [
-    //     `I found your booking:`,
-    //     `Booking ID: ${booking.id}`,
-    //     `Date: ${new Date(booking.date).toLocaleDateString()}`,
-    //     `Time: ${new Date(booking.startTime).toLocaleTimeString()}`,
-    //     `Service: ${booking.service.name}`,
-    //     `Stylist: ${booking.staff.name}`,
-    //     `You can cancel or reschedule this appointment by providing the booking ID.`
-    //   ];
-    // }
-    
-    if (message.includes('book') || message.includes('appointment')) {
-      response.push(...[
-        "You can book an appointment by clicking the 'Book Your Appointment' button or visiting our booking page.",
-        "Would you like me to help you with that?"
-      ]);
-    }
-
-    if (message.includes('book') || message.includes('appointment')) {
-      response.push(...[
-        "You can book an appointment by clicking the 'Book Your Appointment' button or visiting our booking page.",
-        "Would you like me to help you with that?"
-      ]);
-    }
-    
-    if (message.includes('price') || message.includes('cost')) {
-      response.push(...[
-        "Our prices vary depending on the service. You can find detailed pricing information on our services page.",
-        "Would you like me to show you our service menu?"
-      ]);
-    }
-    
-    if (message.includes('location') || message.includes('address')) {
-      response.push(...[
-        "We have multiple salon locations. You can find all our locations and their details on our salons page.",
-        "Would you like me to direct you there?"
-      ]);
-    }
-
-    if( response.length === 0 ) {
-      response.push(...[
-        "I'm here to help!",
-        "Feel free to ask about our services, locations, booking process, or anything else you'd like to know."
-      ]);
-    }
-
-    return response;
   }
-
-  console.log(messages);
 
   return (
     <ChatContainer>
