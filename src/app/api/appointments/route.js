@@ -99,10 +99,9 @@ export async function POST(request) {
       )
     }
 
-    const reference = generateReference()
     const appointment = await prisma.appointment.create({
       data: {
-        id: reference,
+        id: generateReference(),
         date: body.date,
         startTime: body.startTime,
         endTime: body.endTime,

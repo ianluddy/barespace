@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
+import { loadStripe } from '@stripe/stripe-js'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -281,6 +282,8 @@ const ConfirmationValue = styled.span`
   font-weight: 500;
 `
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
 function BookingContent() {
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedSalon, setSelectedSalon] = useState(null)
@@ -382,12 +385,14 @@ function BookingContent() {
     }))
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     setLoading(true)
     setError(null)
 
     try {
-      // Create customer
+
+      // Create customer first
       const customerResponse = await fetch('/api/customers', {
         method: 'POST',
         headers: {
@@ -396,53 +401,65 @@ function BookingContent() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          phone: formData.phone,
+          phone: formData.phone
         }),
       })
 
       if (!customerResponse.ok) {
-        const error = await customerResponse.json()
-        throw new Error(error.message || 'Failed to create customer')
+        throw new Error('Failed to create customer')
       }
 
-      const customerData = await customerResponse.json()
+      const customer = await customerResponse.json()
 
-      // Calculate end time based on service duration
-      const endTime = new Date(selectedTime)
+      const startTime = new Date(selectedTime);
+      const endTime = new Date(selectedTime);
       endTime.setMinutes(endTime.getMinutes() + selectedService.duration)
-
-      // Create appointment
-      const appointmentResponse = await fetch('/api/appointments', {
+      
+      // Create Stripe Checkout session
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          date: selectedDate,
-          startTime: selectedTime,
-          endTime: endTime,
+          appointmentDate: selectedDate,
+          appointmentStartTime: startTime,
+          appointmentEndTime: endTime,
           serviceId: selectedService.id,
+          serviceName: selectedService.name,          
+          servicePrice: selectedService.price,
           staffId: selectedStaff.id,
+          staffName: selectedStaff.name,
           salonId: selectedSalon.id,
-          customerId: customerData.id,
-          notes: formData.notes,
+          salonName: selectedSalon.name,
+          customerId: customer.id,
+          customerEmail: formData.email,
         }),
       })
 
-      if (!appointmentResponse.ok) {
-        const error = await appointmentResponse.json()
-        throw new Error(error.message || 'Failed to create appointment')
+      const { sessionId, error } = await response.json()
+
+      if (error) {
+        setError('Failed to create checkout session')
+        setLoading(false)
+        return
       }
 
-      setSuccess(true)
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
-    } catch (error) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
+      // Redirect to Stripe Checkout
+      const stripe = await stripePromise
+      const { error: stripeError } = await stripe.redirectToCheckout({
+        sessionId,
+      })
+
+      if (stripeError) {
+        setError(stripeError.message)
+      }
+    } catch (err) {
+      console.error('Booking error:', err)
+      setError('Failed to process booking')
     }
+
+    setLoading(false)
   }
 
   const handleNext = () => {

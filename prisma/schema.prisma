@@ -64,6 +64,13 @@ model Customer {
   updatedAt   DateTime    @updatedAt
 }
 
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
 model Appointment {
   id          String    @id @default(uuid())
   date        DateTime
@@ -81,6 +88,9 @@ model Appointment {
   notes       String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  paymentStatus   PaymentStatus @default(pending)
+  paymentAmount   Decimal?      @db.Decimal(10,2)
+  paymentIntentId String?
 }
 
 // Status values: PENDING, CONFIRMED, CANCELLED, COMPLETED, NO_SHOW
