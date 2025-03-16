@@ -173,7 +173,7 @@ const responses = {
   bookingRef: ['What is your booking reference number?'],
   confirmCancel: ['Are you sure you want to cancel booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
   confirmReschedule: ['Are you sure you want to reschedule booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
-  confirmConfirm: ['Your booking is confirmed.'],
+  confirmBooking: ['Type \'confirm\' to confirm your booking.'],
   welcome: ['You\'re very welcome!'],
   restart: ['Let\'s start over. What can I help you with?'],
   salonError: ['I\'m having trouble retrieving our salon locations. Please try again later.'],
@@ -466,7 +466,7 @@ export default function ChatBot() {
           `Email: ${email}\n` 
         );
         response.push(
-          responses.confirm
+          responses.confirmBooking
         );
         return response;
       }
