@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -51,7 +51,8 @@ const Button = styled(Link)`
   }
 `
 
-export default function Success() {
+// Client component that uses useSearchParams
+function SuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [loading, setLoading] = useState(true)
@@ -112,5 +113,19 @@ export default function Success() {
       )}
       <Button href="/">Return Home</Button>
     </Container>
+  )
+}
+
+// Server component that wraps the client component in Suspense
+export default function Success() {
+  return (
+    <Suspense fallback={
+      <Container>
+        <Title>Loading...</Title>
+        <Message>Please wait while we load your booking details.</Message>
+      </Container>
+    }>
+      <SuccessContent />
+    </Suspense>
   )
 } 
