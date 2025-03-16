@@ -28,33 +28,19 @@ export async function sendAppointmentConfirmation({
     minute: '2-digit'
   })
 
-  console.log(process.env.EMAILJS_SERVICE_ID);
-  console.log(process.env.EMAILJS_TEMPLATE_ID);
-  try {
-    const response = await emailjs.send(
-      process.env.EMAILJS_SERVICE_ID,
-      process.env.EMAILJS_TEMPLATE_ID,
-      {
-        to_email: customerEmail,
-        to_name: customerName,
-        appointment_date: date,
-        appointment_time: time,
-        service_name: serviceName,
-        staff_name: staffName,
-        salon_name: salonName,
-        salon_address: salonAddress,
-        reference: reference
-      }
-    )    
-
-    if (response.status !== 200) {
-      console.error('Failed to send confirmation email:', response)
-      throw new Error('Failed to send confirmation email')
+  emailjs.send(
+    process.env.EMAILJS_SERVICE_ID,
+    process.env.EMAILJS_TEMPLATE_ID,
+    {
+      to_email: customerEmail,
+      to_name: customerName,
+      appointment_date: date,
+      appointment_time: time,
+      service_name: serviceName,
+      staff_name: staffName,
+      salon_name: salonName,
+      salon_address: salonAddress,
+      reference: reference
     }
-
-    return response
-  } catch (error) {
-    console.error('Error sending confirmation email:', error)
-    throw error
-  }
+  );
 } 
