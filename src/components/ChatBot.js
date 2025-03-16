@@ -283,21 +283,11 @@ export default function ChatBot() {
 
   const getBotResponse = async (message) => {
 
-    console.log(action);
-    console.log(newBookingDate);
-    console.log(newBookingTime);
-    console.log(newBookingEmail);
-
     const response = [];
     message = message.toLowerCase();
 
-
     const bookingRef = message.match(/br[a-z]{6}/);
-    const email = message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/);
-    const date = message.match(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/);
-    const time = message.match(/[0-9]{2}:[0-9]{2}/);
-    // const service = message.match(/[a-z]+/);
-    // const stylist = message.match(/[a-zA-Z]+/);
+    const email = message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/)
     const yes = message.match(/yes|ya|yeah|yup|yep/);
     const no = message.match(/no/);
 
@@ -330,16 +320,6 @@ export default function ChatBot() {
       response.push(
         responses.help
       );
-      // if( ['confirm', 'cancel', 'reschedule'].includes(action) ) {
-      //   response.push(
-      //     'What is your booking reference number?'
-      //   );
-      // } else if( action === 'book' ) {
-      //   response.push(
-      //     'What is your email address???'
-      //   );
-      // }
-      // return response;
     }
 
     if( action && no ) {
@@ -465,7 +445,6 @@ export default function ChatBot() {
         }
         return response;
       }
-      console.log('email', email);
 
       if (!newBookingEmail && !email) {
         response.push(responses.email);
@@ -557,7 +536,10 @@ export default function ChatBot() {
       // }
       return response;
     }
-    
+
+    if( ['confirm', 'cancel', 'reschedule'].includes(action) ) {
+      // TODO
+    }
 
     // if( ['confirm', 'cancel', 'reschedule'].includes(action) && bookingRef ) {
     //   response.push(
@@ -637,16 +619,6 @@ export default function ChatBot() {
     // }  
 
     return ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Book \n - Confirm \n - Cancel \n - Reschedule'];
-
-    if (message.includes('book') || message.includes('appointment')) {
-      response.push(...[
-        "You can book an appointment by clicking the 'Book Your Appointment' button or visiting our booking page.",
-        "Would you like me to help you with that?"
-      ]);
-    }
-
-
-
 
 
 
