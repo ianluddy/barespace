@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -381,55 +382,6 @@ function BookingContent() {
     }))
   }
 
-  const generateAvailableDates = () => {
-    const dates = []
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    for (let i = 0; i < 14; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
-      if (date.getDay() !== 0) { // Exclude Sundays
-        dates.push(date)
-      }
-    }
-
-    return dates
-  }
-
-  const generateTimeSlots = (date) => {
-    if (!date) return []
-
-    const slots = []
-    const startTime = new Date(date)
-    startTime.setHours(9, 0, 0, 0) // Start at 9 AM
-    const endTime = new Date(date)
-    endTime.setHours(17, 0, 0, 0) // End at 5 PM
-
-    while (startTime < endTime) {
-      slots.push(new Date(startTime))
-      startTime.setMinutes(startTime.getMinutes() + 30)
-    }
-
-    return slots
-  }
-
-  const isTimeSlotAvailable = (time) => {
-    if (!selectedService || !selectedStaff) return true
-
-    const slotEnd = new Date(time)
-    slotEnd.setMinutes(slotEnd.getMinutes() + selectedService.duration)
-
-    return !appointments.some(appointment => {
-      const appointmentStart = new Date(appointment.startTime)
-      const appointmentEnd = new Date(appointment.endTime)
-      return (
-        time >= appointmentStart && time < appointmentEnd ||
-        slotEnd > appointmentStart && slotEnd <= appointmentEnd
-      )
-    })
-  }
-
   const handleSubmit = async () => {
     setLoading(true)
     setError(null)
@@ -663,7 +615,7 @@ function BookingContent() {
                 key={time.toISOString()}
                 selected={selectedTime?.toISOString() === time.toISOString()}
                 onClick={() => handleTimeSelect(time)}
-                disabled={!isTimeSlotAvailable(time)}
+                disabled={!isTimeSlotAvailable(time, selectedService, selectedStaff, appointments)}
               >
                 {time.toLocaleTimeString('en-US', {
                   hour: 'numeric',
