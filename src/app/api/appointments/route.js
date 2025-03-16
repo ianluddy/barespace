@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma'
 import { generateReference } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
+import { sendAppointmentConfirmation } from '@/lib/email'
 
 // GET /api/appointments
 export async function GET(request) {
@@ -98,9 +99,10 @@ export async function POST(request) {
       )
     }
 
+    const reference = generateReference()
     const appointment = await prisma.appointment.create({
       data: {
-        id: generateReference(),
+        id: reference,
         date: body.date,
         startTime: body.startTime,
         endTime: body.endTime,
@@ -117,6 +119,24 @@ export async function POST(request) {
         salon: true,
       },
     })
+    
+    // Send confirmation email
+    try {
+      await sendAppointmentConfirmation({
+        customerEmail: appointment.customer.email,
+        customerName: appointment.customer.name,
+        appointmentDate: appointment.date,
+        startTime: appointment.startTime,
+        serviceName: appointment.service.name,
+        staffName: appointment.staff.name,
+        salonName: appointment.salon.name,
+        salonAddress: appointment.salon.address,
+        reference: appointment.id
+      })
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError)
+      // Don't fail the request if email sending fails
+    }
     
     // Revalidate appointments and staff API routes since staff availability changed
     revalidatePath('/api/appointments')
