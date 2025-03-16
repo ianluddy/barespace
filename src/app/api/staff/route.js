@@ -1,9 +1,25 @@
 import prisma from '@/lib/prisma'
 
 // GET /api/staff
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url)
+  const salonId = searchParams.get('salonId')
+  const serviceId = searchParams.get('serviceId')
+
+  const where = {}
+  if (salonId) {
+    where.salonId = salonId
+  }
+  if (serviceId) {
+    where.services = {
+      some: {
+        id: serviceId
+      }
+    }
+  }
   try {
     const staff = await prisma.staff.findMany({
+      where,
       include: {
         services: true,
         appointments: true,
