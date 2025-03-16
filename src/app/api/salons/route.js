@@ -15,7 +15,11 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json(salons)
+    return NextResponse.json(salons, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200',
+      },
+    })
   } catch (error) {
     console.error('Error fetching salons:', error)
     return NextResponse.json(

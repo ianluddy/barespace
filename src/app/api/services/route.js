@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
 // GET /api/services
 export async function GET(request) {
@@ -20,7 +21,11 @@ export async function GET(request) {
         staff: true,
       },
     })
-    return Response.json(services)
+    return Response.json(services, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200',
+      },
+    })
   } catch (error) {
     console.error(error);
     return Response.json({ error: 'Failed to fetch services' }, { status: 500 })
@@ -39,6 +44,10 @@ export async function POST(request) {
         price: body.price,
       },
     })
+    
+    // Revalidate the services API route
+    revalidatePath('/api/services')
+    
     return Response.json(service, { status: 201 })
   } catch (error) {
     console.error(error);

@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { generateReference } from '@/lib/utils'
+import { revalidatePath } from 'next/cache'
 
 // GET /api/appointments
 export async function GET(request) {
@@ -45,10 +46,18 @@ export async function GET(request) {
     })
 
     if (id && appointments.length > 0) {
-      return Response.json(appointments[0])
+      return Response.json(appointments[0], {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+        },
+      })
     }
     
-    return Response.json(appointments)
+    return Response.json(appointments, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+      },
+    })
   } catch (error) {
     console.error('Error fetching appointments:', error);
     return Response.json({ error: 'Failed to fetch appointments' }, { status: 500 })
@@ -108,6 +117,11 @@ export async function POST(request) {
         salon: true,
       },
     })
+    
+    // Revalidate appointments and staff API routes since staff availability changed
+    revalidatePath('/api/appointments')
+    revalidatePath('/api/staff')
+    
     return Response.json(appointment, { status: 201 })
   } catch (error) {
     console.error('Error creating appointment:', error);
