@@ -175,6 +175,16 @@ const responses = {
   confirmReschedule: ['Are you sure you want to reschedule booking ${booking.id}? \n If so, please confirm by typing \'yes\''],
   confirmConfirm: ['Your booking is confirmed.'],
   welcome: ['You\'re very welcome!'],
+  restart: ['Let\'s start over. What can I help you with?'],
+  salonError: ['I\'m having trouble retrieving our salon locations. Please try again later.'],
+  serviceError: ['I\'m having trouble retrieving our services. Please try again later.'],
+  staffError: ['I\'m having trouble retrieving our staff members. Please try again later.'],
+  dateError: ['I\'m having trouble retrieving our dates. Please try again later.'],
+  timeError: ['I\'m having trouble retrieving our times. Please try again later.'],
+  confirmError: ['I\'m having trouble confirming your booking. Please try again later.'],
+  emailError: ['I\'m having trouble retrieving your email address. Please try again later.'],
+  bookingError: ['I\'m having trouble retrieving your booking. Please try again later.'],
+  bookingSuccess: ['Your booking is confirmed.'],
 }
 
 export default function ChatBot() {
@@ -291,8 +301,6 @@ export default function ChatBot() {
     const email = message.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/)
     const yes = message.match(/yes|ya|yeah|yup|yep/);
     const no = message.match(/no/);
-    const thanks = message.match(/thanks/);
-
     const reschedule = message.match(/reschedule/);
     const confirm = message.match(/confirm/);
     const cancel = message.match(/cancel/);
@@ -308,22 +316,8 @@ export default function ChatBot() {
       setNewBookingDate(null);
       setNewBookingTime(null);
       setNewBookingEmail(null);
-      return ['Let\'s start over. What can I help you with?'];
+      return [responses.restart];
     }
-
-    if( thanks ) {
-      response.push(
-        responses.welcome
-      );
-      return response;
-    }
-
-    // if( booking && action && yes ) {
-    //   console.log('booking', booking);
-    //   console.log('action', action);
-    //   console.log('yes', yes);
-    //   return ['doing action'];
-    // }
 
     if( action && yes ) {
       response.push(
@@ -350,11 +344,11 @@ export default function ChatBot() {
             )
           );
         } else {
-          response.push("I'm having trouble retrieving our salon locations. Please try again later.");
+          response.push(responses.salonError);
         }
         } catch (error) {
-        console.error(error);
-          response.push("Sorry, I couldn't fetch the salon locations. Please try again later.");
+          console.error(error);
+          response.push(responses.salonError);
         }
         return response;
       }
@@ -372,11 +366,11 @@ export default function ChatBot() {
               )
             );
           } else {
-            response.push("I'm having trouble retrieving our services. Please try again later.");
+            response.push(responses.serviceError);
           }
         } catch (error) {
           console.error(error);
-          response.push("Sorry, I couldn't fetch the available services. Please try again later.");
+          response.push(responses.serviceError);
         }
         return response;
       }
@@ -394,11 +388,11 @@ export default function ChatBot() {
               )
             );
           } else {
-            response.push("I'm having trouble retrieving available staff members for this service. Please try again later.");
+            response.push(responses.staffError);
           }
         } catch (error) {
           console.error(error);
-          response.push("Sorry, I couldn't fetch the available staff members. Please try again later.");
+          response.push(responses.staffError);
         }
         return response;
       }
@@ -417,11 +411,11 @@ export default function ChatBot() {
               )
             );
           } else {
-            response.push("I'm having trouble finding available dates. Please try again later.");
+            response.push(responses.dateError);
           }
         } catch (error) {
           console.error(error);
-          response.push("Sorry, I couldn't fetch the available dates. Please try again later.");
+          response.push(responses.dateError);
         }
         return response;
       }
@@ -446,11 +440,11 @@ export default function ChatBot() {
               )
             );
           } else {
-            response.push("I'm having trouble finding available time slots. Please try again later.");
+            response.push(responses.timeError);
           }
         } catch (error) {
           console.error(error);
-          response.push("Sorry, I couldn't fetch the available time slots. Please try again later.");
+          response.push(responses.timeError);
         }
         return response;
       }
@@ -472,7 +466,7 @@ export default function ChatBot() {
           `Email: ${email}\n` 
         );
         response.push(
-          `Type 'confirm' to confirm your booking.`
+          responses.confirm
         );
         return response;
       }
@@ -534,11 +528,11 @@ export default function ChatBot() {
             setNewBookingTime(null);
             setNewBookingEmail(null);
           } else {
-            response.push("I'm having trouble confirming your booking. Please try again later.");
+            response.push(responses.confirmError);
           }
         } catch (error) {
           console.error(error);
-          response.push("I'm having trouble confirming your booking. Please try again later.");
+          response.push(responses.confirmError);
         }
       }
 
