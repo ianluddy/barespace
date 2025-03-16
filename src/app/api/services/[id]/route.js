@@ -26,7 +26,7 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json()
     const service = await prisma.service.update({
-      where: { id: parseInt(params.id) },
+      where: { id: params.id },
       data: {
         name: body.name,
         description: body.description,
@@ -44,7 +44,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await prisma.service.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: params.id },
     })
     return new Response(null, { status: 204 })
   } catch (error) {

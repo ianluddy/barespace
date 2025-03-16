@@ -21,7 +21,7 @@ export async function GET(request) {
       }
     }
     if (staffId) {
-      where.staffId = parseInt(staffId)
+      where.staffId = staffId
     }
     if (customerEmail) {
       where.customer = {

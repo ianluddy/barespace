@@ -328,7 +328,7 @@ function BookingContent() {
         // Handle pre-selected salon from URL
         const salonId = searchParams.get('salon')
         if (salonId) {
-          const salon = salonsData.find(s => s.id === parseInt(salonId))
+          const salon = salonsData.find(s => s.id ===  salonId)
           if (salon) {
             setSelectedSalon(salon)
             setCurrentStep(2)

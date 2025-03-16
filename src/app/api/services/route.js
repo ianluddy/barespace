@@ -7,7 +7,11 @@ export async function GET(request) {
 
   const where = {}
   if (salonId) {
-    where.salonId = salonId
+    where.staff = {
+      some: {
+        salonId: salonId
+      }
+    }
   }
   try {
     const services = await prisma.service.findMany({
