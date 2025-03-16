@@ -97,6 +97,7 @@ export async function POST(request) {
         endTime: body.endTime,
         serviceId: body.serviceId,
         staffId: body.staffId,
+        salonId: body.salonId,
         customerId: body.customerId,
         notes: body.notes,
       },
@@ -104,6 +105,7 @@ export async function POST(request) {
         service: true,
         staff: true,
         customer: true,
+        salon: true,
       },
     })
     return Response.json(appointment, { status: 201 })

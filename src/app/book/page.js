@@ -423,6 +423,7 @@ function BookingContent() {
           endTime: endTime,
           serviceId: selectedService.id,
           staffId: selectedStaff.id,
+          salonId: selectedSalon.id,
           customerId: customerData.id,
           notes: formData.notes,
         }),
