@@ -36,6 +36,10 @@ const NavLinks = styled.div`
   display: flex;
   gap: 2rem;
   align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 const NavLink = styled(Link)`
