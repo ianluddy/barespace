@@ -120,21 +120,6 @@ const BookButton = styled(Link)`
   }
 `
 
-const LoadingSpinner = styled.div`
-  border: 4px solid var(--border);
-  border-top: 4px solid var(--primary);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin: 2rem auto;
-  animation: spin 1s linear infinite;
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`
-
 const ErrorMessage = styled.div`
   color: #ff4444;
   background: rgba(255, 68, 68, 0.1);
@@ -147,7 +132,6 @@ const ErrorMessage = styled.div`
 
 export default function Salons() {
   const [salons, setSalons] = useState([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -161,21 +145,11 @@ export default function Salons() {
         setSalons(data)
       } catch (err) {
         setError(err.message)
-      } finally {
-        setLoading(false)
       }
     }
 
     fetchSalons()
   }, [])
-
-  if (loading) {
-    return (
-      <Container>
-        <LoadingSpinner>Loading salons...</LoadingSpinner>
-      </Container>
-    )
-  }
 
   if (error) {
     return (
