@@ -122,7 +122,7 @@ export async function POST(request) {
     
     // Send confirmation email
     try {
-      sendAppointmentConfirmationEmail({
+      await sendAppointmentConfirmationEmail({
         customerEmail: appointment.customer.email,
         customerName: appointment.customer.name,
         appointmentDate: appointment.date,

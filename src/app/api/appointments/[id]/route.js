@@ -68,7 +68,7 @@ export async function DELETE(request, { params }) {
 
     // Send cancellation email
     try {
-      sendAppointmentCancellationEmail({
+      await sendAppointmentCancellationEmail({
         customerEmail: appointment.customer.email,
         customerName: appointment.customer.name,
         appointmentDate: appointment.date,
