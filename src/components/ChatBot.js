@@ -470,6 +470,22 @@ export default function ChatBot() {
 
       if( confirm ) {
         try {
+          // Create or retrieve customer first
+          const customerResponse = await fetch('/api/customers', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: newBookingEmail
+            })
+          });
+
+          if (!customerResponse.ok) {
+            throw new Error('Failed to create/retrieve customer');
+          }
+
+          const customerData = await customerResponse.json();
           const appointment = await fetch(`/api/appointments`, {
             method: 'POST',
             headers: {
@@ -479,10 +495,10 @@ export default function ChatBot() {
               salonId: newBookingSalon.id,
               serviceId: newBookingService.id,
               staffId: newBookingStaff.id,
+              customerId: customerData.id,
               date: newBookingDate,
               startTime: newBookingTime,
               endTime: newBookingTime,
-              email: newBookingEmail
             })
           });
           if( appointment ) {
