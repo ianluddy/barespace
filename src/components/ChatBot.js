@@ -55,6 +55,14 @@ const ChatHeader = styled.div`
   align-items: center;
   justify-content: space-between;
 `
+const ChatFooter = styled.div`
+  padding: 0 0.5rem 0.75rem 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.5;
+`
 
 const ChatMessages = styled.div`
   flex: 1;
