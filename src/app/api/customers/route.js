@@ -21,9 +21,9 @@ export async function POST(request) {
     const body = await request.json()
 
     // Validate required fields
-    if (!body.name || !body.email || !body.phone) {
+    if (!body.email) {
       return Response.json(
-        { error: 'Name, email, and phone are required' },
+        { error: 'An email address is required' },
         { status: 400 }
       )
     }
@@ -40,9 +40,9 @@ export async function POST(request) {
     // Create new customer
     const customer = await prisma.customer.create({
       data: {
-        name: body.name,
+        name: body.name || null,
         email: body.email,
-        phone: body.phone,
+        phone: body.phone || null,
       },
     })
 
