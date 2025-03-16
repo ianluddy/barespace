@@ -604,26 +604,38 @@ function BookingContent() {
           </ServiceGrid>
         )
       case 3:
+        const availableStaff = staff.filter(staffMember => 
+          staffMember.salonId === selectedSalon.id && 
+          staffMember.services.some(service => service.id === selectedService.id)
+        );
+
         return (
-          <StaffGrid>
-            {staff
-              .filter(staffMember => staffMember.salonId === selectedSalon.id)
-              .map((staffMember) => (
-                <StaffCard
-                  key={staffMember.id}
-                  selected={selectedStaff?.id === staffMember.id}
-                  onClick={() => handleStaffSelect(staffMember)}
-                >
-                  <img
-                    src={staffMember.imageUrl || '/placeholder-staff.jpg'}
-                    alt={staffMember.name}
-                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                  />
-                  <h3>{staffMember.name}</h3>
-                  <p>{staffMember.title}</p>
-                </StaffCard>
-              ))}
-          </StaffGrid>
+          <>
+            {availableStaff.length === 0 ? (
+              <ErrorMessage>
+                No staff members are currently available for {selectedService.name} at {selectedSalon.name}. 
+                Please select a different service or salon.
+              </ErrorMessage>
+            ) : (
+              <StaffGrid>
+                {availableStaff.map((staffMember) => (
+                  <StaffCard
+                    key={staffMember.id}
+                    selected={selectedStaff?.id === staffMember.id}
+                    onClick={() => handleStaffSelect(staffMember)}
+                  >
+                    <img
+                      src={staffMember.imageUrl || '/placeholder-staff.jpg'}
+                      alt={staffMember.name}
+                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                    />
+                    <h3>{staffMember.name}</h3>
+                    <p>{staffMember.title}</p>
+                  </StaffCard>
+                ))}
+              </StaffGrid>
+            )}
+          </>
         )
       case 4:
         return (
