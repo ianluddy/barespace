@@ -618,7 +618,7 @@ export default function ChatBot() {
     //   return ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Confirm \n - Cancel \n - Reschedule'];
     // }  
 
-    return ['I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Book \n - Confirm \n - Cancel \n - Reschedule'];
+    return [responses.default];
 
 
 
