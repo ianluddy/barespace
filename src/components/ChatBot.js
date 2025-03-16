@@ -68,7 +68,7 @@ const Message = styled.div`
   max-width: 80%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  ${props => props.isUser ? `
+  ${props => props.$isUser ? `
     background: var(--primary);
     color: white;
     align-self: flex-end;
@@ -770,7 +770,7 @@ export default function ChatBot() {
           </ChatHeader>
           <ChatMessages>
             {messages.map((message, index) => (
-              <Message key={index} isUser={message.isUser}>
+              <Message key={index} $isUser={message.isUser}>
                 {typeof message.body === 'string' ? message.body.split('\n').map((line, i) => (
                   <Fragment key={i}>
                     {line}
@@ -780,7 +780,7 @@ export default function ChatBot() {
               </Message>
             ))}
             {isTyping && (
-              <Message isUser={false}>
+              <Message $isUser={false}>
                 Typing...
               </Message>
             )}
