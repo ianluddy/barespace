@@ -486,7 +486,7 @@ export default function ChatBot() {
           }
 
           const customerData = await customerResponse.json();
-          const appointment = await fetch(`/api/appointments`, {
+          const appointmentResponse = await fetch(`/api/appointments`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -496,11 +496,17 @@ export default function ChatBot() {
               serviceId: newBookingService.id,
               staffId: newBookingStaff.id,
               customerId: customerData.id,
-              date: newBookingDate,
-              startTime: newBookingTime,
-              endTime: newBookingTime,
+              date: new Date(newBookingDate).toISOString(),
+              startTime: new Date(`${newBookingDate}T${newBookingTime}`).toISOString(),
+              endTime: (() => {
+                const end = new Date(`${newBookingDate}T${newBookingTime}`);
+                end.setMinutes(end.getMinutes() + newBookingService.duration);
+                return end.toISOString();
+              })(),
+              notes: 'Chatbot booking'
             })
           });
+          const appointment = await appointmentResponse.json();
           if( appointment ) {
             response.push(
               `Thanks! Your booking is confirmed. \n` +
