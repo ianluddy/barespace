@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { sendAppointmentCancellationEmail } from '@/lib/email'
 
 // GET /api/appointments/[id]
 export async function GET(request, { params }) {
@@ -55,9 +56,34 @@ export async function DELETE(request, { params }) {
   try {
     const id = params.id
     
-    await prisma.appointment.delete({
+    const appointment = await prisma.appointment.delete({
       where: { id },
+      include: {
+        service: true,
+        staff: true,
+        customer: true,
+        salon: true,
+      },
     })
+
+    // Send cancellation email
+    try {
+      sendAppointmentCancellationEmail({
+        customerEmail: appointment.customer.email,
+        customerName: appointment.customer.name,
+        appointmentDate: appointment.date,
+        startTime: appointment.startTime,
+        serviceName: appointment.service.name,
+        staffName: appointment.staff.name,
+        salonName: appointment.salon.name,
+        salonAddress: appointment.salon.address,
+        reference: appointment.id
+      })
+    } catch (emailError) {
+      console.error('Failed to send cancellation email:', emailError)
+      // Don't fail the request if email sending fails
+    }
+
     return Response.json({ message: 'Appointment deleted successfully' })
   } catch (error) {
     console.error('Error deleting appointment:', error)

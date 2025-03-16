@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { generateReference } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
-import { sendAppointmentConfirmation } from '@/lib/email'
+import { sendAppointmentConfirmationEmail } from '@/lib/email'
 
 // GET /api/appointments
 export async function GET(request) {
@@ -122,7 +122,7 @@ export async function POST(request) {
     
     // Send confirmation email
     try {
-      sendAppointmentConfirmation({
+      sendAppointmentConfirmationEmail({
         customerEmail: appointment.customer.email,
         customerName: appointment.customer.name,
         appointmentDate: appointment.date,
