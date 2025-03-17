@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
-import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
+import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable, getDaySuffix } from '@/utils/dates'
 import { VoiceInput } from '@/lib/voice'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -631,7 +631,7 @@ export default function ChatBot() {
               responses.date,
               availableDates.map(date => 
                 <ActionButton className="action-button" key={date.toISOString()} onClick={() => setNewBookingDate(date.toISOString().split('T')[0])}>
-                  {date.toLocaleDateString()}
+                  {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}{getDaySuffix(date.getDate())}
                 </ActionButton>
               )
             );
@@ -660,7 +660,7 @@ export default function ChatBot() {
               responses.time,
               filteredTimes.map(time => 
                 <ActionButton className="action-button" key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
-                  {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                 </ActionButton>
               )
             );
