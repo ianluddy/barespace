@@ -262,8 +262,8 @@ const responses = {
   email: 'Please provide your email address for the booking confirmation.',
   help: 'Ok let me help you with that.',
   bookingRef: 'What is your booking reference number, in the format BRXXXXXX?',
-  confirmCancel: 'Are you sure you want to cancel this booking? \n If so, please confirm by typing \'confirm\'',
-  confirmReschedule: 'Are you sure you want to reschedule this booking? \n If so, please confirm by typing \'confirm\'',
+  confirmCancel: 'Are you sure you want to cancel this booking? \n Please enter the email address you used to make the booking to confirm.',
+  confirmReschedule: 'Are you sure you want to reschedule this booking? \n Please enter the email address you used to make the booking to confirm.',
   confirmBooking: 'Type \'confirm\' to confirm your booking. \n You will be redirected to Stripe to complete the payment.',
   confirmBookingSuccess: 'Thanks! You\'ll be redirected to our secure payment page to complete your booking.',
   welcome: 'You\'re very welcome!',
@@ -274,7 +274,7 @@ const responses = {
   dateError: 'I\'m having trouble retrieving our dates. Please try again later.',
   timeError: 'I\'m having trouble retrieving our times. Please try again later.',
   confirmError: 'I\'m having trouble confirming your booking. Please try again later.',
-  emailError: 'I\'m having trouble retrieving your email address. Please try again later.',
+  emailError: 'That email address does not match the booking email address. Please try again.',
   bookingError: 'I\'m having trouble retrieving your booking. Please try again later.',
   bookingSuccess: 'Your booking is confirmed.',
   restart: 'Let\'s start over. What can I help you with?',
@@ -818,7 +818,12 @@ export default function ChatBot() {
         return response;
       }
 
-      if( action === 'cancel' && existingBooking && confirm ) {
+      if( email && email[0] !== existingBooking.customer.email ) {
+        response.push(responses.emailError);
+        return response;
+      }
+
+      if( action === 'cancel' && existingBooking && email && email[0] === existingBooking.customer.email ) {
         try{
           await fetch(`/api/appointments/${existingBooking.id}`, {
             method: 'DELETE',
@@ -837,7 +842,7 @@ export default function ChatBot() {
         return response;
       }
 
-      if( action === 'reschedule' && existingBooking && confirm ) {
+      if( action === 'reschedule' && existingBooking && email && email[0] === existingBooking.customer.email ) {
         response.push(responses.rescheduleFirst);
         try{
           await fetch(`/api/appointments/${existingBooking.id}`, {
