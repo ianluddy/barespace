@@ -109,6 +109,10 @@ const Input = styled.input`
     outline: none;
     border-color: var(--primary);
   }
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `
 
 const SendButton = styled.button`

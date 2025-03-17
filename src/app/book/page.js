@@ -11,6 +11,9 @@ const Container = styled.div`
   min-height: 100vh;
   padding: 2rem;
   background: var(--background);
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `
 
 const BookingContainer = styled.div`
