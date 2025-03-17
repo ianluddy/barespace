@@ -56,8 +56,8 @@ const StepCircle = styled.div`
   height: 30px;
   border-radius: 50%;
   background: ${props => {
-    if (props.completed) return 'var(--primary)';
-    if (props.active) return 'var(--accent)';
+    if (props.completed === 'true') return 'var(--primary)';
+    if (props.active === 'true') return 'var(--accent)';
     return 'var(--border)';
   }};
   color: ${props => props.completed || props.active ? 'white' : 'var(--text-secondary)'};
@@ -71,7 +71,7 @@ const StepCircle = styled.div`
 
 const StepName = styled.span`
   font-size: 0.8rem;
-  color: ${props => props.completed || props.active ? 'var(--text-primary)' : 'var(--text-secondary)'};
+  color: ${props => props.completed === 'true' || props.active === 'true' ? 'var(--text-primary)' : 'var(--text-secondary)'};
   text-align: center;
   white-space: nowrap;
 `
@@ -759,84 +759,84 @@ function BookingContent() {
         <StepIndicator>
           <Step>
             <StepCircle 
-              active={currentStep === 1} 
-              completed={isStepCompleted(1)}
+              active={(currentStep === 1).toString()} 
+              completed={(isStepCompleted(1)).toString()}
             >
               1
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(1)}
-              active={currentStep === 1}
+              completed={(isStepCompleted(1)).toString()}
+              active={(currentStep === 1).toString()}
             >
               Salon
             </StepName>
           </Step>
           <Step>
             <StepCircle 
-              active={currentStep === 2} 
-              completed={isStepCompleted(2)}
+              active={(currentStep === 2).toString()} 
+              completed={(isStepCompleted(2)).toString()}
             >
               2
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(2)}
-              active={currentStep === 2}
+              completed={(isStepCompleted(2)).toString()}
+              active={(currentStep === 2).toString()}
             >
               Service
             </StepName>
           </Step>
           <Step>
             <StepCircle 
-              active={currentStep === 3} 
-              completed={isStepCompleted(3)}
+              active={(currentStep === 3).toString()} 
+              completed={(isStepCompleted(3)).toString()}
             >
               3
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(3)}
-              active={currentStep === 3}
+              completed={(isStepCompleted(3)).toString()}
+              active={(currentStep === 3).toString()}
             >
               Staff
             </StepName>
           </Step>
           <Step>
             <StepCircle 
-              active={currentStep === 4} 
-              completed={isStepCompleted(4)}
+              active={(currentStep === 4).toString()} 
+              completed={(isStepCompleted(4)).toString()}
             >
               4
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(4)}
-              active={currentStep === 4}
+              completed={(isStepCompleted(4)).toString()}
+              active={(currentStep === 4).toString()}
             >
               Date
             </StepName>
           </Step>
           <Step>
             <StepCircle 
-              active={currentStep === 5} 
-              completed={isStepCompleted(5)}
+              active={(currentStep === 5).toString()} 
+              completed={(isStepCompleted(5)).toString()}
             >
               5
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(5)}
-              active={currentStep === 5}
+              completed={(isStepCompleted(5)).toString()}
+              active={(currentStep === 5).toString()}
             >
               Time
             </StepName>
           </Step>
           <Step>
             <StepCircle 
-              active={currentStep === 6} 
-              completed={isStepCompleted(6)}
+              active={(currentStep === 6).toString()} 
+              completed={(isStepCompleted(6)).toString()}
             >
               6
             </StepCircle>
             <StepName 
-              completed={isStepCompleted(6)}
-              active={currentStep === 6}
+              completed={(isStepCompleted(6)).toString()}
+              active={(currentStep === 6).toString()}
             >
               Confirm
             </StepName>
