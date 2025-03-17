@@ -281,7 +281,7 @@ const responses = {
   voiceError: 'Sorry, I couldn\'t understand that. Please try again or type your message.',
   cancelSuccess: 'Booking cancelled successfully.',
   cancelError: 'I\'m having trouble cancelling your booking. Please try again later.',
-  rescheduleSuccess: 'Now let\'s create a new booking. Type \'book\' to get started.',
+  rescheduleSuccess: 'Now let\'s create a new booking.',
   rescheduleFirst: 'First let\'s cancel your existing booking.',
   rescheduleError: 'I\'m having trouble rescheduling your booking. Please try again later.',
   bookingNotFound: 'I couldn\'t find a booking with that reference number. Please make sure you\'ve entered it correctly.',
@@ -826,6 +826,9 @@ export default function ChatBot() {
           response.push(responses.cancelError);
         }
         response.push(responses.rescheduleSuccess);
+        setAction('book');
+        setActionConfirmed(true);
+        response.push(getBotResponse('book'));
         return response;
       }
     }
