@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -51,7 +51,7 @@ const Button = styled(Link)`
   }
 `
 
-export default function Success() {
+function Success() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const [loading, setLoading] = useState(true)
@@ -112,5 +112,13 @@ export default function Success() {
       )}
       <Button href="/">Return Home</Button>
     </Container>
+  )
+} 
+
+export default function SuccessPage() {
+  return (
+    <Suspense>
+      <Success />
+    </Suspense>
   )
 } 
