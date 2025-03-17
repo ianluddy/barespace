@@ -388,6 +388,12 @@ export default function ChatBot() {
       // onResult
       (text) => {
         setIsListening(false)
+
+        // Check if the text matches any ActionButton text values
+        if (matchActionButton(text.toLowerCase())) {
+          return;
+        }
+
         // Check if the text with spaces removed starts with 'BR'
         if (text.replace(/\s+/g, '').toUpperCase().startsWith('BR')) {
           // If it starts with BR, use the cleaned text
@@ -414,6 +420,7 @@ export default function ChatBot() {
 
   // Check if the text matches any ActionButton text values
   const matchActionButton = (text) => {
+
     // Get all ActionButtons currently rendered in reverse order so we chose the one closest to the bottom
     const actionButtons = Array.from(document.querySelectorAll('[class*="ActionButton"]')).reverse();
 
