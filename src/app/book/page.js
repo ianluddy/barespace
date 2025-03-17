@@ -313,12 +313,14 @@ function BookingContent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true)
         const [salonsResponse, servicesResponse, staffResponse, appointmentsResponse] = await Promise.all([
           fetch('/api/salons'),
           fetch('/api/services'),
           fetch('/api/staff'),
           fetch('/api/appointments')
         ])
+        setLoading(false)
 
         const [salonsData, servicesData, staffData, appointmentsData] = await Promise.all([
           salonsResponse.json(),
