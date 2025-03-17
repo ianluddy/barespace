@@ -945,7 +945,10 @@ export default function ChatBot() {
             <div ref={messagesEndRef} />
           </ChatMessages>
           <ChatInput>
-            {typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) && (
+            {typeof window !== 'undefined' && 
+              // Check for speech recognition support and exclude iOS devices
+              (('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) && 
+               !/iPad|iPhone|iPod/.test(navigator.userAgent)) && (
                 <MicButton
                   onClick={handleVoiceInput}
                   $isListening={isListening}
