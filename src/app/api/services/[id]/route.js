@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma'
 export async function GET(request, { params }) {
   try {
     const service = await prisma.service.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: params.id },
       include: {
         staff: true,
         appointments: true,
