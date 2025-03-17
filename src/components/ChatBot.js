@@ -800,7 +800,7 @@ export default function ChatBot() {
       {isOpen && (
         <ChatWindow>
           <ChatHeader>
-            Barespace Assistant
+            Sparebace Assistant
             <CloseButton onClick={() => setIsOpen(false)}>✕</CloseButton>
           </ChatHeader>
           <ChatMessages>

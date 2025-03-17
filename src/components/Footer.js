@@ -62,14 +62,6 @@ const SocialLinks = styled.div`
   }
 `
 
-const Copyright = styled.div`
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--accent);
-  color: var(--text-secondary);
-`
-
 export default function () {
   return (
     <Footer>
@@ -87,8 +79,8 @@ export default function () {
           <h3>Contact Us</h3>
           <ul>
             <li>📞 (555) 123-4567</li>
-            <li>✉️ info@barespace.com</li>
-            <li>📍 123 Main St, City, State</li>
+            <li>✉️ info@sparebace.com</li>
+            <li>📍 20 Newcastle Road, Galway H91RR2N</li>
             <li>⏰ Mon-Sat: 9am-7pm</li>
           </ul>
         </FooterSection>

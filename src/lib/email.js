@@ -24,7 +24,7 @@ export async function sendAppointmentConfirmationEmail({
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: customerEmail,
-      subject: 'Your Barespace Appointment Confirmation',
+      subject: 'Your Sparebace Appointment Confirmation',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #0070f3;">Appointment Confirmation</h1>
@@ -50,7 +50,7 @@ export async function sendAppointmentConfirmationEmail({
           
           <p>Just reply to this email or use our chat assistant on the website.</p>
           
-          <p style="margin-top: 30px;">Thank you for choosing Barespace!</p>
+          <p style="margin-top: 30px;">Thank you for choosing Sparebace!</p>
           
           <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
             <p>This is an automated message, please do not reply directly to this email.</p>
@@ -82,7 +82,7 @@ export async function sendAppointmentCancellationEmail({
     const info = await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: customerEmail,
-      subject: 'Your Barespace Appointment Cancellation',
+      subject: 'Your Sparebace Appointment Cancellation',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #0070f3;">Appointment Cancellation</h1>
@@ -107,7 +107,7 @@ export async function sendAppointmentCancellationEmail({
           
           <p>Just reply to this email or use our chat assistant on the website.</p>
           
-          <p style="margin-top: 30px;">Thank you for choosing Barespace!</p>
+          <p style="margin-top: 30px;">Thank you for choosing Sparebace!</p>
           
           <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
             <p>This is an automated message, please do not reply directly to this email.</p>

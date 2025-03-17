@@ -6,7 +6,7 @@ import ChatBot from '@/components/ChatBot'
 import './globals.css'
 
 export const metadata = {
-  title: 'Barespace',
+  title: 'Sparebace',
   description: 'Premium hair care experience',
 }
 

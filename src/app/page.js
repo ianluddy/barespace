@@ -20,9 +20,10 @@ const Hero = styled.section`
   justify-content: center;
   text-align: center;
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-              url('https://barespace.io/wp-content/uploads/2024/02/DSC04105-Enhanced-NR-scaled.jpg') center/cover;
+              url('/sparebace.jpg') center/cover;
   color: var(--text-primary);
   margin-bottom: 4rem;
+  
 `
 
 const HeroContent = styled.div`

@@ -70,7 +70,7 @@ async function main() {
         name: 'Downtown Salon',
         address: '123 Main St, Downtown',
         phone: '(555) 123-4567',
-        email: 'downtown@barespace.com',
+        email: 'downtown@sparebace.com',
         description: 'Our flagship location in the heart of downtown',
         imageUrl: '/salons/downtown.jpg',
       },
@@ -80,7 +80,7 @@ async function main() {
         name: 'Westside Salon',
         address: '456 West Ave, Westside',
         phone: '(555) 234-5678',
-        email: 'westside@barespace.com',
+        email: 'westside@sparebace.com',
         description: 'Modern salon in the trendy Westside district',
         imageUrl: '/salons/westside.jpg',
       },
@@ -90,7 +90,7 @@ async function main() {
         name: 'Eastside Salon',
         address: '789 East Blvd, Eastside',
         phone: '(555) 345-6789',
-        email: 'eastside@barespace.com',
+        email: 'eastside@sparebace.com',
         description: 'Cozy salon with a welcoming atmosphere',
         imageUrl: '/salons/eastside.jpg',
       },
@@ -103,7 +103,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'John Smith',
-        email: 'john@barespace.com',
+        email: 'john@sparebace.com',
         phone: '(555) 111-2222',
         title: 'Senior Stylist',
         imageUrl: '/staff/john-smith.jpg',
@@ -120,7 +120,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Sarah Johnson',
-        email: 'sarah@barespace.com',
+        email: 'sarah@sparebace.com',
         phone: '(555) 333-4444',
         title: 'Color Specialist',
         imageUrl: '/staff/sarah-johnson.jpg',
@@ -137,7 +137,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Mike Wilson',
-        email: 'mike@barespace.com',
+        email: 'mike@sparebace.com',
         phone: '(555) 555-6666',
         title: 'Master Barber',
         imageUrl: '/staff/mike-wilson.jpg',
@@ -155,7 +155,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Emma Davis',
-        email: 'emma@barespace.com',
+        email: 'emma@sparebace.com',
         phone: '(555) 777-8888',
         title: 'Senior Stylist',
         imageUrl: '/staff/emma-davis.jpg',
@@ -172,7 +172,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'David Brown',
-        email: 'david@barespace.com',
+        email: 'david@sparebace.com',
         phone: '(555) 999-0000',
         title: 'Color Specialist',
         imageUrl: '/staff/david-brown.jpg',
@@ -189,7 +189,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Lisa Anderson',
-        email: 'lisa@barespace.com',
+        email: 'lisa@sparebace.com',
         phone: '(555) 111-3333',
         title: 'Master Barber',
         imageUrl: '/staff/lisa-anderson.jpg',
@@ -207,7 +207,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'James Wilson',
-        email: 'james@barespace.com',
+        email: 'james@sparebace.com',
         phone: '(555) 444-5555',
         title: 'Senior Stylist',
         imageUrl: '/staff/james-wilson.jpg',
@@ -224,7 +224,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Sophie Taylor',
-        email: 'sophie@barespace.com',
+        email: 'sophie@sparebace.com',
         phone: '(555) 666-7777',
         title: 'Color Specialist',
         imageUrl: '/staff/sophie-taylor.jpg',
@@ -241,7 +241,7 @@ async function main() {
     prisma.staff.create({
       data: {
         name: 'Alex Thompson',
-        email: 'alex@barespace.com',
+        email: 'alex@sparebace.com',
         phone: '(555) 888-9999',
         title: 'Master Barber',
         imageUrl: '/staff/alex-thompson.jpg',

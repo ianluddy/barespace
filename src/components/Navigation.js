@@ -75,7 +75,7 @@ export default function Navigation() {
   return (
     <Header>
       <Nav>
-        <Logo href="/">BARESPACE</Logo>
+        <Logo href="/">SPAREBACE</Logo>
         <NavLinks>
           <NavLink href="/services" className={pathname === '/services' ? 'active' : ''}>Our Services</NavLink>
           <NavLink href="/staff" className={pathname === '/staff' ? 'active' : ''}>Our Team</NavLink>

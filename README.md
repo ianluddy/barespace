@@ -1,6 +1,6 @@
-# Barespace
+# Sparebace
 
-A modern salon booking application built with Next.js, Prisma, and SQLite.
+A modern salon booking application built with Next.js, Prisma, and PostgreSQL.
 
 ## Features
 
@@ -14,8 +14,10 @@ A modern salon booking application built with Next.js, Prisma, and SQLite.
 
 - Next.js 14 (App Router)
 - Prisma ORM
-- SQLite Database
-- Tailwind CSS
+- PostgreSQL
+- Styled-components
+- Vercel
+- NeonDB
 
 ## Getting Started
 
@@ -46,7 +48,18 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 Create a `.env` file in the root directory with the following variables:
 ```
-DATABASE_URL="file:./dev.db"
+# Local PostgreSQL connection
+DATABASE_URL={postgres_connection_string}
+
+# Email
+SMTP_USER={smtp_user}
+SMTP_PASS={smtp_pass}
+SMTP_FROM={smpt_from}
+
+# Stripe
+STRIPE_SECRET_KEY={stripe_secret_key}
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY={stripe_publishable_key}
+NEXT_PUBLIC_BASE_URL={local_or_prod_url}
 ```
 
 ## License

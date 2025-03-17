@@ -40,24 +40,24 @@ BEGIN
 
     -- Create salons
     INSERT INTO "Salon" (id, name, address, phone, email, description, "imageUrl", "createdAt", "updatedAt") VALUES
-      (salon1_id, 'Downtown Salon', '123 Main St, Downtown', '(555) 123-4567', 'downtown@barespace.com', 'Our flagship location in the heart of downtown', '/salons/downtown.jpg', NOW(), NOW()),
-      (salon2_id, 'Westside Salon', '456 West Ave, Westside', '(555) 234-5678', 'westside@barespace.com', 'Modern salon in the trendy Westside district', '/salons/westside.jpg', NOW(), NOW()),
-      (salon3_id, 'Eastside Salon', '789 East Blvd, Eastside', '(555) 345-6789', 'eastside@barespace.com', 'Cozy salon with a welcoming atmosphere', '/salons/eastside.jpg', NOW(), NOW());
+      (salon1_id, 'Downtown Salon', '123 Main St, Downtown', '(555) 123-4567', 'downtown@sparebace.com', 'Our flagship location in the heart of downtown', '/salons/downtown.jpg', NOW(), NOW()),
+      (salon2_id, 'Westside Salon', '456 West Ave, Westside', '(555) 234-5678', 'westside@sparebace.com', 'Modern salon in the trendy Westside district', '/salons/westside.jpg', NOW(), NOW()),
+      (salon3_id, 'Eastside Salon', '789 East Blvd, Eastside', '(555) 345-6789', 'eastside@sparebace.com', 'Cozy salon with a welcoming atmosphere', '/salons/eastside.jpg', NOW(), NOW());
 
     -- Create staff members
     INSERT INTO "Staff" (id, name, email, phone, title, "imageUrl", "salonId", "createdAt", "updatedAt") VALUES
       -- Downtown Salon staff
-      (staff1_id, 'John Smith', 'john@barespace.com', '(555) 111-2222', 'Senior Stylist', '/staff/john-smith.jpg', salon1_id, NOW(), NOW()),
-      (staff2_id, 'Sarah Johnson', 'sarah@barespace.com', '(555) 333-4444', 'Color Specialist', '/staff/sarah-johnson.jpg', salon1_id, NOW(), NOW()),
-      (staff3_id, 'Mike Wilson', 'mike@barespace.com', '(555) 555-6666', 'Master Barber', '/staff/mike-wilson.jpg', salon1_id, NOW(), NOW()),
+      (staff1_id, 'John Smith', 'john@sparebace.com', '(555) 111-2222', 'Senior Stylist', '/staff/john-smith.jpg', salon1_id, NOW(), NOW()),
+      (staff2_id, 'Sarah Johnson', 'sarah@sparebace.com', '(555) 333-4444', 'Color Specialist', '/staff/sarah-johnson.jpg', salon1_id, NOW(), NOW()),
+      (staff3_id, 'Mike Wilson', 'mike@sparebace.com', '(555) 555-6666', 'Master Barber', '/staff/mike-wilson.jpg', salon1_id, NOW(), NOW()),
       -- Westside Salon staff
-      (staff4_id, 'Emma Davis', 'emma@barespace.com', '(555) 777-8888', 'Senior Stylist', '/staff/emma-davis.jpg', salon2_id, NOW(), NOW()),
-      (staff5_id, 'David Brown', 'david@barespace.com', '(555) 999-0000', 'Color Specialist', '/staff/david-brown.jpg', salon2_id, NOW(), NOW()),
-      (staff6_id, 'Lisa Anderson', 'lisa@barespace.com', '(555) 111-3333', 'Master Barber', '/staff/lisa-anderson.jpg', salon2_id, NOW(), NOW()),
+      (staff4_id, 'Emma Davis', 'emma@sparebace.com', '(555) 777-8888', 'Senior Stylist', '/staff/emma-davis.jpg', salon2_id, NOW(), NOW()),
+      (staff5_id, 'David Brown', 'david@sparebace.com', '(555) 999-0000', 'Color Specialist', '/staff/david-brown.jpg', salon2_id, NOW(), NOW()),
+      (staff6_id, 'Lisa Anderson', 'lisa@sparebace.com', '(555) 111-3333', 'Master Barber', '/staff/lisa-anderson.jpg', salon2_id, NOW(), NOW()),
       -- Eastside Salon staff
-      (staff7_id, 'James Wilson', 'james@barespace.com', '(555) 444-5555', 'Senior Stylist', '/staff/james-wilson.jpg', salon3_id, NOW(), NOW()),
-      (staff8_id, 'Sophie Taylor', 'sophie@barespace.com', '(555) 666-7777', 'Color Specialist', '/staff/sophie-taylor.jpg', salon3_id, NOW(), NOW()),
-      (staff9_id, 'Alex Thompson', 'alex@barespace.com', '(555) 888-9999', 'Master Barber', '/staff/alex-thompson.jpg', salon3_id, NOW(), NOW());
+      (staff7_id, 'James Wilson', 'james@sparebace.com', '(555) 444-5555', 'Senior Stylist', '/staff/james-wilson.jpg', salon3_id, NOW(), NOW()),
+      (staff8_id, 'Sophie Taylor', 'sophie@sparebace.com', '(555) 666-7777', 'Color Specialist', '/staff/sophie-taylor.jpg', salon3_id, NOW(), NOW()),
+      (staff9_id, 'Alex Thompson', 'alex@sparebace.com', '(555) 888-9999', 'Master Barber', '/staff/alex-thompson.jpg', salon3_id, NOW(), NOW());
 
     -- Create service-staff relationships
     INSERT INTO "_ServiceToStaff" ("A", "B") VALUES
