@@ -37,6 +37,7 @@ const HeroTitle = styled.h1`
   margin-bottom: 1rem;
   font-weight: bold;
   color: var(--text-primary);
+  line-height: initial;
 `
 
 const HeroSubtitle = styled.p`
