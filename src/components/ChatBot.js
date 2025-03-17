@@ -399,10 +399,65 @@ export default function ChatBot() {
     )
   }
 
+  // Check if the text matches any ActionButton text values
+  const matchActionButton = (text) => {
+    // Get all ActionButtons currently rendered in reverse order so we chose the one closest to the bottom
+    const actionButtons = Array.from(document.querySelectorAll('[class*="ActionButton"]')).reverse();
+
+    for (const button of actionButtons) {
+      // Get the button's text content
+      const buttonText = button.textContent.trim().toLowerCase();
+
+      // Check if the voice input text matches the button text
+      if (buttonText.includes(text)) {
+        // Simulate a click on the matching button
+        button.click();
+        return true;
+      }
+      
+      // Try to match dates in different formats
+      if (buttonText.includes('/')) {
+        try {
+          const buttonDate = new Date(buttonText);
+          const textDate = new Date(text);
+          
+          if (!isNaN(buttonDate.getTime()) && !isNaN(textDate.getTime())) {
+            if (buttonDate.toDateString() === textDate.toDateString()) {
+              button.click();
+              return true;
+            }
+          }
+        } catch (e) {
+          // Continue checking if date parsing fails
+        }
+      }
+      
+      // Try to match times
+      if (buttonText.includes(':')) {
+        const timePattern = /(\d{1,2}):(\d{2})/;
+        const buttonMatch = buttonText.match(timePattern);
+        const textMatch = text.match(timePattern);
+        
+        if (buttonMatch && textMatch && 
+            buttonMatch[1] === textMatch[1] && 
+            buttonMatch[2] === textMatch[2]) {
+          button.click();
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  };  
+
   const handleSend = async (programmaticValue = null) => {
     if (!inputValue.trim() && !programmaticValue) return
 
-    let userMessageValue = inputValue.trim() || programmaticValue;
+    const userMessageValue = inputValue.trim() || programmaticValue;
+
+    if (!programmaticValue && matchActionButton(userMessageValue.toLowerCase())) {
+      return;
+    }
 
     // Add user message
     const userMessage = { body: userMessageValue, isUser: true }
@@ -673,8 +728,10 @@ export default function ChatBot() {
           setIsRedirecting(false);
           response.push(responses.confirmError);
         }
-        return response;
       }
+      response.push(
+        responses.confirmBooking
+      );
       return response;
     }
 
