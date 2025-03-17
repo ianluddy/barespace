@@ -181,23 +181,6 @@ export default function Home() {
       </Hero>
 
       <Section>
-        <SectionTitle>Our Services</SectionTitle>
-        <Grid>
-          {services.map(service => (
-            <Card key={service.id}>
-              <CardContent>
-                <CardTitle>{service.name}</CardTitle>
-                <CardDescription>{service.description}</CardDescription>
-                <CardPrice>${service.price}</CardPrice>
-                <CardDescription>{service.duration} minutes</CardDescription>
-                <CardButton href={`/book?service=${service.id}`}>Book Now</CardButton>
-              </CardContent>
-            </Card>
-          ))}
-        </Grid>
-      </Section>
-
-      <Section>
         <SectionTitle>Our Salons</SectionTitle>
         <Grid>
           {salons.map(salon => (
@@ -209,6 +192,23 @@ export default function Home() {
                 <CardDescription>📞 {salon.phone}</CardDescription>
                 <CardDescription>✉️ {salon.email}</CardDescription>
                 <CardButton href={`/book?salon=${salon.id}`}>Book at this Salon</CardButton>
+              </CardContent>
+            </Card>
+          ))}
+        </Grid>
+      </Section>
+
+      <Section>
+        <SectionTitle>Our Services</SectionTitle>
+        <Grid>
+          {services.map(service => (
+            <Card key={service.id}>
+              <CardContent>
+                <CardTitle>{service.name}</CardTitle>
+                <CardDescription>{service.description}</CardDescription>
+                <CardPrice>${service.price}</CardPrice>
+                <CardDescription>{service.duration} minutes</CardDescription>
+                <CardButton href={`/book?service=${service.id}`}>Book Now</CardButton>
               </CardContent>
             </Card>
           ))}
