@@ -438,7 +438,7 @@ export default function ChatBot() {
   const matchActionButton = (text) => {
 
     // Get all ActionButtons currently rendered in reverse order so we chose the one closest to the bottom
-    const actionButtons = Array.from(document.querySelectorAll('[class*="ActionButton"]')).reverse();
+    const actionButtons = Array.from(document.querySelectorAll('.action-button')).reverse();
 
     for (const button of actionButtons) {
       // Get the button's text content
@@ -565,7 +565,7 @@ export default function ChatBot() {
           response.push(
             responses.salon,
             salons.map(salon => 
-              <ActionButton key={salon.id} onClick={() => setNewBookingSalon(salon)}>{salon.name} - {salon.address}</ActionButton>
+              <ActionButton className="action-button" key={salon.id} onClick={() => setNewBookingSalon(salon)}>{salon.name} - {salon.address}</ActionButton>
             )
           );
         } else {
@@ -585,7 +585,7 @@ export default function ChatBot() {
             response.push(
               responses.service,
               services.map(service => 
-                <ActionButton key={service.id} onClick={() => setNewBookingService(service)}>
+                <ActionButton className="action-button" key={service.id} onClick={() => setNewBookingService(service)}>
                   {service.name} - ${service.price}
                 </ActionButton>
               )
@@ -607,7 +607,7 @@ export default function ChatBot() {
             response.push(
               responses.staff,
               staff.map(stylist => 
-                <ActionButton key={stylist.id} onClick={() => setNewBookingStaff(stylist)}>
+                <ActionButton className="action-button" key={stylist.id} onClick={() => setNewBookingStaff(stylist)}>
                   {stylist.name}
                 </ActionButton>
               )
@@ -630,7 +630,7 @@ export default function ChatBot() {
             response.push(
               responses.date,
               availableDates.map(date => 
-                <ActionButton key={date.toISOString()} onClick={() => setNewBookingDate(date.toISOString().split('T')[0])}>
+                <ActionButton className="action-button" key={date.toISOString()} onClick={() => setNewBookingDate(date.toISOString().split('T')[0])}>
                   {date.toLocaleDateString()}
                 </ActionButton>
               )
@@ -659,7 +659,7 @@ export default function ChatBot() {
             response.push(
               responses.time,
               filteredTimes.map(time => 
-                <ActionButton key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
+                <ActionButton className="action-button" key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
                   {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </ActionButton>
               )
