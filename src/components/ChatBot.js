@@ -908,7 +908,7 @@ export default function ChatBot() {
             <div ref={messagesEndRef} />
           </ChatMessages>
           <ChatInput>
-            {voiceInput.isSupported && (
+            {typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) && (
                 <MicButton
                   onClick={handleVoiceInput}
                   $isListening={isListening}
