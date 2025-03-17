@@ -277,6 +277,7 @@ const responses = {
   emailError: 'I\'m having trouble retrieving your email address. Please try again later.',
   bookingError: 'I\'m having trouble retrieving your booking. Please try again later.',
   bookingSuccess: 'Your booking is confirmed.',
+  restart: 'Let\'s start over. What can I help you with?',
   hi: 'Hi! How can I help you today?',
   voiceError: 'Sorry, I couldn\'t understand that. Please try again or type your message.',
   cancelSuccess: 'Booking cancelled successfully.',
@@ -354,6 +355,21 @@ export default function ChatBot() {
 
   useEffect(() => {
     scrollToBottom()
+    
+    // Filter bot messages
+    const botMessages = messages.filter(message => !message.isUser);
+    
+    // If the bot is repeating itself, restart the bot
+    if (botMessages.length >= 5) {
+      const lastFiveBotMessages = botMessages.slice(-5);
+      const firstMessageBody = lastFiveBotMessages[0].body;
+      const allSameContent = lastFiveBotMessages.every(message => 
+        message.body === firstMessageBody
+      );
+      if( allSameContent ) {
+        restartBot();
+      }
+    }
   }, [messages])
 
   useEffect(() => {
@@ -492,6 +508,19 @@ export default function ChatBot() {
       setMessages(prev => [...prev, ...botMessages])
       setIsTyping(false)
     }, 700)
+  }
+
+  const restartBot = () => {
+    setAction(null);
+    setActionConfirmed(false);
+    setNewBookingSalon(null);
+    setNewBookingService(null);
+    setNewBookingStaff(null);
+    setNewBookingDate(null);
+    setNewBookingTime(null);
+    setNewBookingEmail(null);
+    setExistingBooking(null);
+    setMessages(prev => [...prev, { body: responses.restart, isUser: false }])
   }
 
   const getBotResponse = async (message) => {
