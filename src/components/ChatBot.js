@@ -375,8 +375,17 @@ export default function ChatBot() {
       // onResult
       (text) => {
         setIsListening(false)
-        setInputValue(text)
-        handleSend(text)
+        // Check if the text with spaces removed starts with 'BR'
+        if (text.replace(/\s+/g, '').toUpperCase().startsWith('BR')) {
+          // If it starts with BR, use the cleaned text
+          const cleanedText = text.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()
+          setInputValue(cleanedText)
+          handleSend(cleanedText)
+        } else {
+          // Otherwise use the original text
+          setInputValue(text)
+          handleSend(text)
+        }
       },
       // onError
       (error) => {
