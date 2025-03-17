@@ -8,7 +8,7 @@ const Container = styled.div`
   margin: 8rem auto 2rem;
   padding: 2rem;
   text-align: center;
-  min-height: 50vh;
+  min-height: 65vh;
 `
 
 const CancelIcon = styled.div`

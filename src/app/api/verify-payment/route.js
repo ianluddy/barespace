@@ -43,8 +43,8 @@ export async function GET(request) {
       data: {
         id: generateReference(),
         date: new Date(session.metadata.appointmentDate),
-        startTime: session.metadata.appointmentStartTime,
-        endTime: session.metadata.appointmentEndTime,
+        startTime: new Date(session.metadata.appointmentStartTime),
+        endTime: new Date(session.metadata.appointmentEndTime),
         customerId: session.metadata.customerId,
         serviceId: session.metadata.serviceId,
         staffId: session.metadata.staffId,

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Fragment } from 'react'
 import styled from 'styled-components'
 import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
 import { VoiceInput } from '@/lib/voice'
+import { loadStripe } from '@stripe/stripe-js'
 
 const ChatContainer = styled.div`
   position: fixed;
@@ -199,6 +200,42 @@ const MicButton = styled.button`
   }
 `
 
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 2000;
+`
+
+const LoadingSpinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1rem;
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`
+
+const LoadingText = styled.div`
+  font-size: 1.2rem;
+  text-align: center;
+  max-width: 80%;
+  line-height: 1.5;
+`
+
 const responses = {
   default: 'I\'m sorry, I didn\'t understand your request. Please choose from one of the following options: \n - Book \n - Confirm \n - Cancel \n - Reschedule',
   book: 'Sounds like you want to book an appointment, is that correct?',
@@ -216,7 +253,8 @@ const responses = {
   bookingRef: 'What is your booking reference number, in the format BRXXXXXX?',
   confirmCancel: 'Are you sure you want to cancel this booking? \n If so, please confirm by typing \'confirm\'',
   confirmReschedule: 'Are you sure you want to reschedule this booking? \n If so, please confirm by typing \'confirm\'',
-  confirmBooking: 'Type \'confirm\' to confirm your booking.',
+  confirmBooking: 'Type \'confirm\' to confirm your booking. \n You will be redirected to Stripe to complete the payment.',
+  confirmBookingSuccess: 'Thanks! You\'ll be redirected to our secure payment page to complete your booking.',
   welcome: 'You\'re very welcome!',
   restart: 'Let\'s start over. What can I help you with?',
   salonError: 'I\'m having trouble retrieving our salon locations. Please try again later.',
@@ -246,6 +284,7 @@ export default function ChatBot() {
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [isListening, setIsListening] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
   const voiceInput = useRef(new VoiceInput())
@@ -298,7 +337,7 @@ export default function ChatBot() {
 
   useEffect(() => {
     if( newBookingTime ) {
-      handleSend(newBookingTime);
+      handleSend(newBookingTime.toTimeString().split(' ')[0]);
     }
   }, [newBookingTime]);
 
@@ -507,7 +546,7 @@ export default function ChatBot() {
             response.push(
               responses.time,
               filteredTimes.map(time => 
-                <ActionButton key={time.toISOString()} onClick={() => setNewBookingTime(time.toTimeString().split(' ')[0])}>
+                <ActionButton key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
                   {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </ActionButton>
               )
@@ -535,7 +574,7 @@ export default function ChatBot() {
           `Service: ${newBookingService.name}\n` + 
           `Stylist: ${newBookingStaff.name}\n` +
           `Date: ${new Date(newBookingDate).toLocaleDateString()}\n` +
-          `Time: ${new Date(`1970-01-01T${newBookingTime}`).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}\n` +
+          `Time: ${new Date(newBookingTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}\n` +
           `Email: ${email}\n` 
         );
         response.push(
@@ -546,6 +585,7 @@ export default function ChatBot() {
 
       if( confirm ) {
         try {
+          setIsRedirecting(true);
           // Create or retrieve customer first
           const customerResponse = await fetch('/api/customers', {
             method: 'POST',
@@ -562,52 +602,69 @@ export default function ChatBot() {
           }
 
           const customerData = await customerResponse.json();
-          const appointmentResponse = await fetch(`/api/appointments`, {
+
+          const endTime = new Date(newBookingTime);
+          endTime.setMinutes(endTime.getMinutes() + newBookingService.duration)
+
+          // Create Stripe checkout session
+          const checkoutSession = await fetch('/api/create-checkout-session', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              salonId: newBookingSalon.id,
+              appointmentDate: newBookingDate,
+              appointmentStartTime: new Date(newBookingTime),
+              appointmentEndTime: endTime,
               serviceId: newBookingService.id,
+              serviceName: newBookingService.name,          
+              servicePrice: newBookingService.price,
               staffId: newBookingStaff.id,
+              staffName: newBookingStaff.name,
+              salonId: newBookingSalon.id,
+              salonName: newBookingSalon.name,
               customerId: customerData.id,
-              date: new Date(newBookingDate).toISOString(),
-              startTime: new Date(`${newBookingDate}T${newBookingTime}`).toISOString(),
-              endTime: (() => {
-                const end = new Date(`${newBookingDate}T${newBookingTime}`);
-                end.setMinutes(end.getMinutes() + newBookingService.duration);
-                return end.toISOString();
-              })(),
-              notes: 'Chatbot booking'
-            })
-          });
-          const appointment = await appointmentResponse.json();
-          if( appointment ) {
-            response.push(
-              `Thanks! Your booking is confirmed. \n` +
-              `Booking ID: ${appointment.id} \n` +
-              `Date: ${new Date(appointment.date).toLocaleDateString()} \n` +
-              `Time: ${new Date(appointment.startTime).toLocaleTimeString()} \n` +
-              `Service: ${appointment.service.name} \n` +
-              `Salon: ${appointment.salon.name} \n` +
-              `Stylist: ${appointment.staff.name}` 
-            );
-            setAction(null);
-            setActionConfirmed(false);
-            setNewBookingSalon(null);
-            setNewBookingService(null);
-            setNewBookingStaff(null);
-            setNewBookingDate(null);
-            setNewBookingTime(null);
-            setNewBookingEmail(null);
-          } else {
-            response.push(responses.confirmError);
+              customerEmail: customerData.email,
+              customerName: customerData.name || 'Guest',
+              notes: 'Booked via chatbot'
+            }),
+          });            
+
+          const { sessionId, error } = await checkoutSession.json();
+
+          if (error) {
+            throw new Error('Failed to create checkout session');
           }
+
+          response.push(
+            responses.confirmBookingSuccess
+          );
+
+          // Redirect to Stripe Checkout
+          const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+          const { error: stripeError } = await stripe.redirectToCheckout({
+            sessionId,
+          });
+
+          if (stripeError) {
+            throw new Error(stripeError.message);
+          }
+
+          // Reset booking state
+          setAction(null);
+          setActionConfirmed(false);
+          setNewBookingSalon(null);
+          setNewBookingService(null);
+          setNewBookingStaff(null);
+          setNewBookingDate(null);
+          setNewBookingTime(null);
+          setNewBookingEmail(null);
         } catch (error) {
           console.error(error);
+          setIsRedirecting(false);
           response.push(responses.confirmError);
         }
+        return response;
       }
       return response;
     }
@@ -730,6 +787,16 @@ export default function ChatBot() {
   }
   return (
     <ChatContainer>
+      {isRedirecting && (
+        <LoadingOverlay>
+          <LoadingSpinner />
+          <LoadingText>
+            Preparing your secure payment page...
+            <br />
+            Please don't close this window.
+          </LoadingText>
+        </LoadingOverlay>
+      )}
       {isOpen && (
         <ChatWindow>
           <ChatHeader>
