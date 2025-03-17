@@ -353,7 +353,7 @@ export default function ChatBot() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsOpen(location.pathname === '/');
+      setIsOpen(location.pathname === '/' && window.innerWidth > 768);
     }, 1500);
 
     return () => clearTimeout(timer);
