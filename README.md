@@ -2,6 +2,8 @@
 
 A modern salon booking application built with Next.js, Prisma, and PostgreSQL.
 
+https://sparebace.vercel.app/
+
 ## Features
 
 - Book appointments with your preferred stylist
