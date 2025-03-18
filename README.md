@@ -1,20 +1,21 @@
 # Sparebace
 
-A modern salon booking application built with Next.js, Prisma, and PostgreSQL.
-
 https://sparebace.vercel.app/
+
+A modern salon booking application built Next.js, Prisma and PostgreSQL.
+
+Deployed on Vercel - https://vercel.com
+DB hosting on Neon - https://console.neon.tech/
 
 ## Features
 
-- Book appointments with your preferred stylist
-- View available services and staff
+- Book appointments for your chosen stylist, service and salon
 - Manage appointments through a chatbot interface
-- Multiple salon locations
 - Real-time availability checking
 
 ## Tech Stack
 
-- Next.js 14 (App Router)
+- Next.js 14
 - Prisma ORM
 - PostgreSQL
 - Styled-components
