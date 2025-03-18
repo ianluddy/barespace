@@ -20,8 +20,10 @@
 - Prisma ORM
 - PostgreSQL
 - Styled-components
+- Nodemailer
 - Vercel
 - NeonDB
+- Stripe
 
 ## Getting Started
 
