@@ -444,42 +444,37 @@ export default function ChatBot() {
       // Get the button's text content
       const buttonText = button.textContent.trim().toLowerCase();
 
-      // Check if the voice input text matches the button text
-      if (buttonText.includes(text)) {
-        // Simulate a click on the matching button
-        button.click();
-        return true;
-      }
-      
-      // Try to match dates in different formats
-      if (buttonText.includes('/')) {
-        try {
-          const buttonDate = new Date(buttonText);
-          const textDate = new Date(text);
-          
-          if (!isNaN(buttonDate.getTime()) && !isNaN(textDate.getTime())) {
-            if (buttonDate.toDateString() === textDate.toDateString()) {
-              button.click();
-              return true;
-            }
-          }
-        } catch (e) {
-          // Continue checking if date parsing fails
-        }
-      }
-      
-      // Try to match times
-      if (buttonText.includes(':')) {
-        const timePattern = /(\d{1,2}):(\d{2})/;
-        const buttonMatch = buttonText.match(timePattern);
-        const textMatch = text.match(timePattern);
-        
-        if (buttonMatch && textMatch && 
-            buttonMatch[1] === textMatch[1] && 
-            buttonMatch[2] === textMatch[2]) {
+      // Check if the button has the action-button-date class
+      if (button.classList.contains('date-action-button')) {
+        const buttonMonth = buttonText.split(' ')[0];
+        const buttonDay = buttonText.split(' ')[1].replace(/\D/g, '');
+        const textMonth = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"].find(month => text.includes(month));
+        const textDayMatch = text.match(/\d+/);
+        const textDay = textDayMatch ? textDayMatch[0] : null;
+        if (textMonth && textDay && buttonMonth.includes(textMonth) && textDay === buttonDay) {
           button.click();
           return true;
         }
+      } else if (button.classList.contains('time-action-button')) {     
+        let cleanedButtonText = buttonText.replace(/[^0-9]/g, '');
+        let cleanedText = text.replace(/[^0-9]/g, '');
+        
+        if (cleanedButtonText.charAt(0) === '0') {
+          cleanedButtonText = cleanedButtonText.slice(1);
+        }
+        
+        if (cleanedText.charAt(0) === '0') {
+          cleanedText = cleanedText.slice(1);
+        }
+
+        if (cleanedButtonText === cleanedText) {
+          button.click();
+          return true;
+        }
+      } else if (buttonText.includes(text) || buttonText.includes(text.split(' ')[0])) {
+        // Simulate a click on the matching button
+        button.click();
+        return true;
       }
     }
     
@@ -630,7 +625,7 @@ export default function ChatBot() {
             response.push(
               responses.date,
               availableDates.map(date => 
-                <ActionButton className="action-button" key={date.toISOString()} onClick={() => setNewBookingDate(date.toISOString().split('T')[0])}>
+                <ActionButton className="action-button date-action-button" key={date.toISOString()} onClick={() => setNewBookingDate(date.toISOString().split('T')[0])}>
                   {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}{getDaySuffix(date.getDate())}
                 </ActionButton>
               )
@@ -659,7 +654,7 @@ export default function ChatBot() {
             response.push(
               responses.time,
               filteredTimes.map(time => 
-                <ActionButton className="action-button" key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
+                <ActionButton className="action-button time-action-button" key={time.toISOString()} onClick={() => setNewBookingTime(time)}>
                   {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                 </ActionButton>
               )
