@@ -4,8 +4,9 @@ https://sparebace.vercel.app/
 
 A modern salon booking application built Next.js, Prisma and PostgreSQL.
 
-Deployed on Vercel - https://vercel.com
-DB hosting on Neon - https://console.neon.tech/
+Deployed on [Vercel](https://vercel.com)
+
+DB hosting on [Neon](https://neon.tech/)
 
 ## Features
 
