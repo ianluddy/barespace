@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 import { GeistSans } from 'geist/font'
 import { GeistMono } from 'geist/font'
 import Navigation from '@/components/Navigation'
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
         </StyledComponentsRegistry>
         <ChatBot />
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
