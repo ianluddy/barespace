@@ -6,6 +6,8 @@
 
 [Neon](https://neon.tech/) for serverless Postgres hosting.
 
+[Stripe](https://stripe.com/) for payments.
+
 ## Features
 
 - Book appointments for your chosen stylist, service and salon
