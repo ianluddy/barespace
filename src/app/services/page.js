@@ -39,6 +39,15 @@ const ServicesGrid = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }    
 `
 
 const ServiceCard = styled.div`
@@ -92,6 +101,12 @@ const BookButton = styled(Link)`
     opacity: 0.9;
     text-decoration: none;
   }
+
+  @media (max-width: 768px) {
+    display: block;
+    text-align: center;
+    padding: 1rem;
+  }  
 `
 
 export default function Services() {

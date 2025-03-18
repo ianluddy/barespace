@@ -34,11 +34,21 @@ const PageDescription = styled.p`
 
 const SalonsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
 `
 
 const SalonCard = styled.div`
@@ -63,16 +73,28 @@ const SalonImage = styled.div`
     height: 100%;
     object-fit: cover;
   }
+  
+  @media (max-width: 768px) {
+    height: 180px;
+  }
 `
 
 const SalonInfo = styled.div`
   padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 const SalonName = styled.h3`
   font-size: 1.5rem;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `
 
 const SalonAddress = styled.p`
@@ -117,6 +139,12 @@ const BookButton = styled(Link)`
   &:hover {
     opacity: 0.9;
     text-decoration: none;
+  }
+  
+  @media (max-width: 768px) {
+    display: block;
+    text-align: center;
+    padding: 1rem;
   }
 `
 
