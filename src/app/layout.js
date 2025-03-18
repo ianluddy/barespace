@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import ChatBot from '@/components/ChatBot'
 import './globals.css'
+import StyledComponentsRegistry from '@/lib/registry'
 
 export const metadata = {
   title: 'Sparebace',
@@ -15,7 +16,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <Navigation />
-        {children}
+        <StyledComponentsRegistry>
+          {children}
+        </StyledComponentsRegistry>
         <ChatBot />
         <Footer />
       </body>

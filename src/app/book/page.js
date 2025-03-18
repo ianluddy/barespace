@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { generateAvailableDates, generateTimeSlots, isTimeSlotAvailable } from '@/utils/dates'
 import { loadStripe } from '@stripe/stripe-js'
+import StyledComponentsRegistry from '@/lib/registry'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -872,7 +873,7 @@ function BookingContent() {
   )
 }
 
-export default function Booking() {
+export default function BookPage() {
   return (
     <Container>
       <Suspense fallback={
@@ -882,7 +883,9 @@ export default function Booking() {
           </LoadingOverlay>
         </BookingContainer>
       }>
-        <BookingContent />
+        <StyledComponentsRegistry>
+          <BookingContent />
+        </StyledComponentsRegistry>
       </Suspense>
     </Container>
   )
