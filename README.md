@@ -35,21 +35,7 @@ cd barespace
 npm install
 ```
 
-3. Set up the database
-```bash
-npx prisma migrate dev
-```
-
-4. Start the development server
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the application.
-
-## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
+3. Create a `.env` file in the root directory with the following variables:
 ```
 # Local PostgreSQL connection
 DATABASE_URL={postgres_connection_string}
@@ -64,6 +50,19 @@ STRIPE_SECRET_KEY={stripe_secret_key}
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY={stripe_publishable_key}
 NEXT_PUBLIC_BASE_URL={local_or_prod_url}
 ```
+
+4. Set up the database
+```bash
+npx prisma migrate dev
+```
+
+5. Start the development server
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the application.
+
 
 ## License
 

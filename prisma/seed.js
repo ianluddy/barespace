@@ -2,18 +2,10 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-function generateReference() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let reference = 'BR';
-  for (let i = 0; i < 6; i++) {
-    reference += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return reference;
-}
-
 async function main() {
   // Delete existing data
   await prisma.appointment.deleteMany()
+  await prisma.$executeRaw`DELETE FROM "_ServiceToStaff"`
   await prisma.staff.deleteMany()
   await prisma.service.deleteMany()
   await prisma.customer.deleteMany()
@@ -97,7 +89,7 @@ async function main() {
     }),
   ])
 
-  // Create staff members for each salon
+  // Create staff members
   const staff = await Promise.all([
     // Downtown Salon staff
     prisma.staff.create({
@@ -282,52 +274,47 @@ async function main() {
     }),
   ])
 
-  // Create sample appointments
-  const appointments = await Promise.all([
+  // Create appointments
+  await Promise.all([
     prisma.appointment.create({
       data: {
-        id: generateReference(),
-        date: new Date('2024-03-15'),
-        startTime: new Date('2024-03-15T10:00:00'),
-        endTime: new Date('2024-03-15T10:30:00'),
-        serviceId: services[0].id,
-        staffId: staff[0].id,
+        id: 'BRNLEMTN',
         customerId: customers[0].id,
-        notes: 'First appointment of the day',
+        staffId: staff[0].id,
+        serviceId: services[0].id,
+        date: new Date('2024-03-20'),
+        startTime: new Date('2024-03-20T10:00:00'),
+        endTime: new Date('2024-03-20T10:30:00'),
+        status: 'CONFIRMED',
       },
     }),
     prisma.appointment.create({
       data: {
-        id: generateReference(),
-        date: new Date('2024-03-15'),
-        startTime: new Date('2024-03-15T11:00:00'),
-        endTime: new Date('2024-03-15T11:45:00'),
-        serviceId: services[1].id,
-        staffId: staff[1].id,
+        id: 'BRKLMNOP',
         customerId: customers[1].id,
-        notes: 'Premium service requested',
+        staffId: staff[1].id,
+        serviceId: services[3].id,
+        date: new Date('2024-03-20'),
+        startTime: new Date('2024-03-20T11:00:00'),
+        endTime: new Date('2024-03-20T13:00:00'),
+        status: 'CONFIRMED',
       },
     }),
     prisma.appointment.create({
       data: {
-        id: generateReference(),
-        date: new Date('2024-03-15'),
-        startTime: new Date('2024-03-15T13:00:00'),
-        endTime: new Date('2024-03-15T13:20:00'),
-        serviceId: services[2].id,
-        staffId: staff[2].id,
+        id: 'BRQRSTUV',
         customerId: customers[2].id,
-        notes: 'Beard trim only',
+        staffId: staff[2].id,
+        serviceId: services[2].id,
+        date: new Date('2024-03-20'),
+        startTime: new Date('2024-03-20T14:00:00'),
+        endTime: new Date('2024-03-20T14:20:00'),
+        status: 'CONFIRMED',
       },
     }),
   ])
 
-  console.log('Seed data created successfully:')
-  console.log(`${services.length} services`)
-  console.log(`${salons.length} salons`)
-  console.log(`${staff.length} staff members`)
-  console.log(`${customers.length} customers`)
-  console.log(`${appointments.length} appointments`)
+  console.log('Seed data created successfully')
 }
 
 main()
