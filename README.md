@@ -9,7 +9,7 @@
 ## Features
 
 - Book appointments for your chosen stylist, service and salon
-- Manage appointments through a chatbot interface
+- Manage appointments through a chatbot interface with voice recognition (not on iOS)
 - Real-time availability checking
 
 ## Tech Stack
